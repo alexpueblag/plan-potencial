@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <style>
   :root{
     /* Paleta REAL de yodesarrollo.mx (medida por área): blanco/crema + negro
@@ -66,6 +68,25 @@
   .maps-btn{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--lavanda);color:var(--vino);border:1px solid #cfe0e0;border-radius:9px;padding:11px 16px;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;}
   .maps-btn:hover{background:#e3eced;}
   .maps-btn svg{width:17px;height:17px;stroke:var(--indigo);fill:none;stroke-width:1.7;}
+  /* mapa (Leaflet + satélite) */
+  .map-wrap{padding:0;overflow:hidden;}
+  .map-search{display:flex;gap:8px;padding:12px;border-bottom:1px solid var(--linea);}
+  .map-search input{flex:1;padding:11px 13px;border:1px solid var(--linea);background:var(--crema);font-size:14px;font-family:inherit;border-radius:9px;}
+  .map-search input:focus{outline:none;border-color:var(--teal);background:#fff;}
+  .map-geo{flex:none;display:inline-flex;align-items:center;gap:6px;background:var(--lavanda);color:var(--teal);border:1px solid #cfe0e0;border-radius:9px;padding:0 14px;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .map-geo:hover{background:#e3eced;}
+  .map-geo svg{width:15px;height:15px;stroke:var(--teal);fill:none;stroke-width:1.8;}
+  #map{height:360px;width:100%;background:#dfe6e6;z-index:1;}
+  .map-hint{padding:10px 14px;font-size:12.5px;color:var(--carbon);background:#fff;display:flex;align-items:center;gap:8px;}
+  .map-hint.ok{color:var(--teal);font-weight:700;}
+  .map-hint svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.9;flex:none;}
+  .leaflet-container{font-family:inherit;}
+  .dir-opcional{margin:0 0 6px;}
+  .dir-opcional summary{cursor:pointer;font-size:12.5px;color:var(--teal);padding:8px 2px;list-style:none;}
+  .dir-opcional summary::-webkit-details-marker{display:none;}
+  .dir-opcional summary:hover{text-decoration:underline;}
+  .dir-opcional textarea{width:100%;padding:13px 14px;border:1px solid var(--linea);background:var(--crema);font-size:15px;font-family:inherit;border-radius:9px;resize:vertical;min-height:54px;margin-top:6px;}
+  @media(max-width:600px){ #map{height:300px;} .map-search{flex-wrap:wrap;} .map-geo{width:100%;justify-content:center;padding:11px;} }
   /* steppers / pills */
   .stepper{display:inline-flex;align-items:center;border:1px solid var(--linea);border-radius:11px;overflow:hidden;background:#fff;}
   .stepper button{width:46px;height:46px;background:var(--crema);border:none;font-size:20px;cursor:pointer;color:var(--vino);}
@@ -122,6 +143,10 @@
   .reveal-body{background:#fff;border:1px solid var(--linea);border-top:none;padding:30px 34px;border-radius:0 0 14px 14px;display:flex;flex-direction:column;}
   .resumen-q{font-family:Georgia,serif;font-size:clamp(17px,3vw,21px);line-height:1.5;margin:2px 0;order:0;}
   .resumen-q em{color:var(--vino);font-style:italic;}
+  .reveal-map{order:0;margin-top:16px;border:1px solid var(--linea);border-radius:12px;overflow:hidden;}
+  #revealMap{height:200px;width:100%;background:#dfe6e6;}
+  .reveal-map-cap{font-size:11.5px;color:var(--carbon);padding:9px 13px;background:#fff;display:flex;align-items:center;gap:7px;}
+  .reveal-map-cap svg{width:14px;height:14px;stroke:var(--teal);fill:none;stroke-width:1.9;}
   .sesion-box{background:var(--arena);border-left:3px solid var(--vino);padding:20px 22px;margin-top:24px;border-radius:12px;order:1;}
   .sesion-box h3{font-family:Georgia,serif;font-weight:normal;font-size:19px;margin-bottom:8px;}
   .sesion-box ul{list-style:none;font-size:13px;color:var(--carbon);}
@@ -202,19 +227,20 @@
   <!-- ===== PASO 2 · DÓNDE ESTÁ ===== -->
   <section class="pantalla" data-p="2">
     <div class="kicker" data-txt="p2_kicker">Paso 2 · Ubicación</div>
-    <h2 data-txt="p2_titulo">¿Dónde está tu terreno?</h2>
-    <p class="sub" data-txt="p2_sub">Con la ubicación tu Masterdeveloper analiza la zona, su valor y lo que se puede construir.</p>
-    <div class="field">
-      <label data-txt="p2_dir_lbl">Dirección de la propiedad</label>
-      <small data-txt="p2_dir_help">Calle y número, colonia, ciudad. Lo más completo que puedas.</small>
-      <textarea id="fDireccion" placeholder="Ej. Calle Reforma 123, Col. Centro, Hermosillo, Sonora" oninput="S.direccion=this.value;guardarS()"></textarea>
+    <h2 data-txt="p2_titulo">Marca tu terreno en el mapa</h2>
+    <p class="sub" data-txt="p2_sub">No necesitas dar tu dirección. Busca la zona, arrastra el pin sobre tu terreno y listo: con eso tu Masterdeveloper analiza la zona y su potencial.</p>
+    <div class="field map-wrap">
+      <div class="map-search">
+        <input id="mapSearch" placeholder="Busca tu colonia, calle o ciudad…" inputmode="search">
+        <button type="button" class="map-geo" id="mapGeoBtn" data-txt="p2_geo_btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Usar mi ubicación</button>
+      </div>
+      <div id="map"></div>
+      <div class="map-hint" id="mapHint"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-11a7 7 0 10-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> <span data-txt="p2_geo_help">Busca la zona y arrastra el pin sobre tu terreno</span></div>
     </div>
-    <div class="field">
-      <label data-txt="p2_geo_lbl">Ubicación exacta en el mapa <span style="font-weight:400;font-size:12px;color:var(--piedra)">(opcional pero ideal)</span></label>
-      <a class="maps-btn" id="mapsBtn" target="_blank" rel="noopener" data-txt="p2_geo_btn"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-11a7 7 0 10-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> Buscar mi terreno en Google Maps</a>
-      <small data-txt="p2_geo_help">Búscalo, mantén presionado el punto exacto, toca "Compartir" → "Copiar enlace", y pégalo aquí.</small>
-      <input id="fGeo" inputmode="url" placeholder="Pega aquí el enlace de Google Maps" oninput="S.geo=this.value;guardarS()">
-    </div>
+    <details class="dir-opcional">
+      <summary data-txt="p2_dir_lbl">¿Prefieres escribir la dirección? (opcional)</summary>
+      <textarea id="fDireccion" placeholder="Calle y número, colonia, ciudad" oninput="S.direccion=this.value;guardarS()"></textarea>
+    </details>
     <div class="nav">
       <button class="atras" onclick="ir(1)" data-txt="nav_atras">← Atrás</button>
       <button class="btn" id="p2cont" onclick="contUbic()" data-txt="nav_cont">Continuar →</button>
@@ -350,6 +376,11 @@
     <div class="reveal-body">
       <p class="resumen-q" id="rResumen"></p>
 
+      <div class="reveal-map" id="revealMapWrap" style="display:none">
+        <div id="revealMap"></div>
+        <div class="reveal-map-cap"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-11a7 7 0 10-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> <span data-txt="r_mapa_cap">Tu terreno · ya lo tenemos ubicado</span></div>
+      </div>
+
       <div class="sesion-box">
         <h3 data-txt="r_sesion_t">Agenda tu videollamada con tu Masterdeveloper</h3>
         <ul>
@@ -406,7 +437,7 @@ const AGENDA_URL = "https://calendar.app.google/aoxnSs1WVrkhXFLw6";  /* "Agendar
 
 /* ---------- Estado ---------- */
 const S0 = {
-  intencion:null, direccion:"", geo:"", tipoTerreno:null,
+  intencion:null, direccion:"", geo:"", lat:null, lng:null, tipoTerreno:null,
   m2:300, frente:10, m2construido:0,
   rol:null, precio:"", apodo:"", nombre:"", email:"", tel:"",
   contactoTipo:"whatsapp", otraForma:null, origen:{}
@@ -474,6 +505,7 @@ function ir(p){
   const pt=document.getElementById("pasoTxt");
   if(pt)pt.textContent=(np>=1&&np<=4)?("Paso "+np+" de "+TOTAL_P):(np===5?"Casi listo — solo tus datos":"");
   window.scrollTo({top:0,behavior:"smooth"});
+  if(String(p)==="2"){ initMapa(); if(__map) setTimeout(function(){__map.invalidateSize();},250); }
   livebar();guardarS();
 }
 
@@ -552,10 +584,9 @@ function pulsoLivebar(){const lb=document.getElementById("livebar");if(lb){lb.cl
 /* ---------- Validación paso 2 ---------- */
 function contUbic(){
   const msg=document.getElementById("p2msg");
-  S.direccion=document.getElementById("fDireccion").value.trim();
-  S.geo=document.getElementById("fGeo").value.trim();
-  if(!S.direccion && !S.geo){
-    msg.textContent="Escribe la dirección o pega el enlace del mapa para continuar.";
+  const fd=document.getElementById("fDireccion"); if(fd)S.direccion=fd.value.trim();
+  if(!S.lat && !S.direccion){
+    msg.textContent="Marca tu terreno en el mapa (o escribe la dirección) para continuar.";
     msg.style.display="block"; return;
   }
   msg.style.display="none"; guardarS(); ir(3);
@@ -620,7 +651,7 @@ function revelar(){
     tipo:"lead_potencial", folio:folio,
     nombre:S.nombre, email:S.email, tel:S.tel, contacto_canal:tipo,
     apodo:S.apodo, intencion:S.intencion, intencion_txt:intLabel, rol:S.rol,
-    direccion:S.direccion, geo:S.geo, tipo_terreno:S.tipoTerreno,
+    direccion:S.direccion, geo:S.geo, lat:S.lat, lng:S.lng, tipo_terreno:S.tipoTerreno,
     m2:S.m2, frente:S.frente, fondo:fondoDerivado(), m2_construido:S.m2construido,
     precio_esperado:S.precio, aprovechamiento:nivelAprovechamiento(),
     consent:true, consent_ts:new Date().toISOString(), version_aviso:TEXTOS.version_aviso||"",
@@ -645,6 +676,24 @@ function revelar(){
 
   montarAgenda();
   ir(6);
+  montarRevealMapa();
+}
+
+/* mini-mapa satelital del terreno en el cierre (no interactivo) */
+let __revealMap=null;
+function montarRevealMapa(){
+  const wrap=document.getElementById("revealMapWrap");
+  if(!wrap) return;
+  if(!(S.lat&&S.lng) || typeof L==="undefined"){ wrap.style.display="none"; return; }
+  wrap.style.display="";
+  if(__revealMap){ __revealMap.setView([S.lat,S.lng],17); setTimeout(function(){__revealMap.invalidateSize();},250); return; }
+  setTimeout(function(){
+    __revealMap=L.map("revealMap",{zoomControl:false,attributionControl:false,
+      dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false}).setView([S.lat,S.lng],17);
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:20}).addTo(__revealMap);
+    L.marker([S.lat,S.lng]).addTo(__revealMap);
+    setTimeout(function(){__revealMap.invalidateSize();},250);
+  },150);
 }
 
 /* ---------- Agenda ----------
@@ -729,11 +778,48 @@ function renderLogo(){
   }
 }
 
-/* ---------- Buscar en Maps: arma el link de búsqueda ---------- */
-function actualizarMapsBtn(){
-  const b=document.getElementById("mapsBtn"); if(!b)return;
-  const q=encodeURIComponent(S.direccion||"mi terreno");
-  b.href="https://www.google.com/maps/search/?api=1&query="+q;
+/* ---------- Mapa (Leaflet + satélite Esri, sin API key) ---------- */
+let __map=null, __marker=null;
+const HMO=[29.0729,-110.9559];  /* centro por defecto: Hermosillo */
+function setPin(lat,lng,centrar){
+  S.lat=+lat; S.lng=+lng;
+  S.geo="https://www.google.com/maps?q="+S.lat+","+S.lng;  /* link para el CRM */
+  if(__marker){ __marker.setLatLng([S.lat,S.lng]); }
+  if(centrar && __map){ __map.setView([S.lat,S.lng], Math.max(__map.getZoom(),17)); }
+  const h=document.getElementById("mapHint");
+  if(h){ h.classList.add("ok"); h.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Ubicación marcada — puedes ajustar el pin'; }
+  guardarS();
+}
+function initMapa(){
+  if(__map || typeof L==="undefined") return;
+  const start = (S.lat&&S.lng)?[S.lat,S.lng]:HMO;
+  __map=L.map("map",{zoomControl:true,attributionControl:true}).setView(start, (S.lat?17:12));
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {maxZoom:20,attribution:"Esri"}).addTo(__map);
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+    {maxZoom:20,opacity:0.9}).addTo(__map);
+  __marker=L.marker(start,{draggable:true}).addTo(__map);
+  __marker.on("dragend",function(e){ const p=e.target.getLatLng(); setPin(p.lat,p.lng,false); });
+  __map.on("click",function(e){ setPin(e.latlng.lat,e.latlng.lng,false); });
+  if(S.lat&&S.lng) setPin(S.lat,S.lng,false);
+  setTimeout(function(){ __map.invalidateSize(); },200);  /* el contenedor estaba oculto */
+}
+function buscarMapa(q){
+  if(!q) return;
+  fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=mx&q="+encodeURIComponent(q),
+    {headers:{"Accept":"application/json"}})
+    .then(r=>r.json()).then(function(a){
+      if(a&&a[0]){ setPin(+a[0].lat,+a[0].lon,true); }
+    }).catch(function(){});
+}
+function usarMiUbicacion(){
+  if(!navigator.geolocation) return;
+  const h=document.getElementById("mapHint"); if(h)h.innerHTML="Buscando tu ubicación…";
+  navigator.geolocation.getCurrentPosition(
+    function(pos){ setPin(pos.coords.latitude,pos.coords.longitude,true); },
+    function(){ const h2=document.getElementById("mapHint"); if(h2)h2.innerHTML="No pudimos obtener tu ubicación — búscala o muévete en el mapa."; },
+    {enableHighAccuracy:true,timeout:8000}
+  );
 }
 
 /* ---------- Boot ---------- */
@@ -743,12 +829,16 @@ render();
 /* restaurar valores en inputs */
 (function(){
   const set=(id,v)=>{const e=document.getElementById(id);if(e&&v!=null)e.value=v;};
-  set("fDireccion",S.direccion);set("fGeo",S.geo);set("fPrecio",S.precio);set("fApodo",S.apodo);
+  set("fDireccion",S.direccion);set("fPrecio",S.precio);set("fApodo",S.apodo);
   ["m2","frente","m2construido"].forEach(k=>{const e=document.getElementById(k+"Val");if(e)e.textContent=(+S[k]).toLocaleString("es-MX");});
   if(S.tipoTerreno==="construccion")document.getElementById("construidoWrap").style.display="";
 })();
-document.getElementById("fDireccion").addEventListener("input",actualizarMapsBtn);
-actualizarMapsBtn();
+(function(){
+  const s=document.getElementById("mapSearch");
+  if(s)s.addEventListener("keydown",function(e){ if(e.key==="Enter"){e.preventDefault();buscarMapa(s.value.trim());} });
+  const g=document.getElementById("mapGeoBtn");
+  if(g)g.addEventListener("click",usarMiUbicacion);
+})();
 ir(0);
 
 /* Textos en vivo desde el Apps Script (si está desplegado) */
