@@ -40,6 +40,17 @@ HTML estático de un solo archivo (`index.html`), sin build ni dependencias.
    la nueva URL.
 5. **Instalar la routine** de `docs/tarea-analisis-potencial.md` en Cowork.
 
+## Activar el píxel de Meta (medición del embudo)
+1. **Navegador:** en `index.html`, pon el ID del píxel de YODESARROLLO en `const META_PIXEL_ID`. Dispara: `PageView`, `PasoEmbudo {paso}` (cada paso), `Lead` (con `event_id=folio`), `Schedule` (clic en agendar), `Contact` (rama otra-forma).
+2. **CAPI server-side (opcional pero recomendado):** en `docs/webhook-apps-script.gs`, pon el MISMO `META_PIXEL_ID` y el `META_CAPI_TOKEN` (Events Manager → Conversions API). Manda `Lead`/`Contact` desde el servidor con el mismo `event_id` → deduplica y resiste iOS/adblock.
+3. En Events Manager arma el embudo con el evento `PasoEmbudo`.
+
+## Redespliegue del Apps Script (cuando cambie el .gs)
+Tras editar `docs/webhook-apps-script.gs`: pégalo en el proyecto "Plan de Potencial",
+Implementar → Administrar → Editar → **Nueva versión**. Luego, una vez:
+- `actualizarTextosMapa()` — empuja al Sheet la copy nueva del Paso 2 + aviso simplificado.
+- (Las columnas Lat/Lng se agregan solas en el siguiente lead.)
+
 ## Identidad
 Vino `#703438` · Índigo `#465798` · Petróleo `#013e42` · Crema `#f6f5f2`.
 Títulos serif, cuerpo PT Sans.
