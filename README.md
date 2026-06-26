@@ -5,6 +5,15 @@ Forms viejos (Plan de Potencial + "Desarrollemos juntos") con una experiencia
 por pasos, marca Yodesarrollo, ~2 minutos. Mismo motor probado de
 [aurum-experiencia](https://github.com/alexpueblag/aurum-experiencia).
 
+## El embudo (importante)
+1. **Formulario** (este) → capta interés + datos del terreno. Es el primer contacto.
+2. **Videollamada GRATIS** → el Masterdeveloper explica qué es el Plan de Potencial, con ejemplos, y su **costo**.
+3. **Plan de Potencial (DE PAGO)** → el análisis/diagnóstico a fondo del terreno.
+4. **Co-desarrollo** → solo si el Plan de Potencial da números positivos, el dueño **puede ser seleccionado** para co-desarrollar con la cartera de accionistas/co-desarrolladores. **No es automático** — pasa por el filtro.
+
+El formulario NO regala análisis ni muestra costos: su único trabajo es
+**agendar la videollamada gratis**. Cero cifras de dinero en pantalla.
+
 ## Qué es
 HTML estático de un solo archivo (`index.html`), sin build ni dependencias.
 - **5 pasos + cierre:** objetivo → ubicación → terreno → expectativa → datos → reveal.
@@ -18,7 +27,7 @@ HTML estático de un solo archivo (`index.html`), sin build ni dependencias.
 - `index.html` — la app completa.
 - `aviso-privacidad.html` — aviso LFPDPPP.
 - `docs/webhook-apps-script.gs` — Web App: GET textos + POST lead (UPSERT por folio).
-- `docs/tarea-analisis-potencial.md` — routine diaria (borrador de análisis en Gmail).
+- `docs/tarea-analisis-potencial.md` — routine diaria (borrador en Gmail para AGENDAR la videollamada; no entrega el Plan de pago).
 - `docs/paridad.md` — mapeo de los campos viejos → nuevos (0 huérfanos).
 
 ## Puesta en marcha (pasos de Alejandro)

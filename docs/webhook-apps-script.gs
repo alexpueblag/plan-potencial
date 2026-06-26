@@ -1,4 +1,12 @@
 /**
+ * ############################################################
+ * ##  ⚠️  PROYECTO DE APPS SCRIPT NUEVO E INDEPENDIENTE   ##
+ * ##  NO pegues esto en el script de Aurum / arquitectura. ##
+ * ##  Comparte nombres (doGet, doPost, CRM_ID…) con él;    ##
+ * ##  mezclarlos ROMPERÍA ambos. Crea un proyecto NUEVO.   ##
+ * ##  Solo agrega pestañas nuevas al Sheet (no toca nada). ##
+ * ############################################################
+ *
  * ============================================================
  *  WEBHOOK — Despierta tu Terreno (Plan de Potencial · Yodesarrollo)
  * ============================================================
@@ -251,17 +259,17 @@ const TEXTOS_SEMILLA = [
   ["marca_sub", "CO·DESARROLLO INMOBILIARIO", "Logo texto línea 2"],
   ["logo_url", "", "URL de imagen del logo (vacío = marca tipográfica)"],
 
-  ["p0_badge", "Gratis · 2 minutos · sin compromiso", ""],
+  ["p0_badge", "Videollamada gratis · 2 min · sin compromiso", ""],
   ["p0_titulo",
    "Tu terreno puede estar <em>dormido</em>. Descubre lo que podría llegar a ser.",
    "Portada · admite <em>"],
   ["p0_sub",
-   "Cuéntanos de tu propiedad y tu Masterdeveloper te envía un análisis de potencial con números — en menos de 48 horas. Tu terreno sigue a tu nombre, sin deuda.",
+   "Cuéntanos de tu terreno y agenda una videollamada gratis con tu Masterdeveloper. Ahí te explicamos —con ejemplos— tu Plan de Potencial: el análisis que define si tu terreno es candidato al co-desarrollo.",
    ""],
   ["p0_cta", "Descubrir el potencial →", ""],
-  ["p0_t1", "Tu terreno sigue a tu nombre", ""],
+  ["p0_t1", "Videollamada inicial sin costo", ""],
   ["p0_t2", "Cientos de miles de m² desarrollados", ""],
-  ["p0_t3", "Respuesta en menos de 48 h", ""],
+  ["p0_t3", "Te contactamos en menos de 48 h", ""],
 
   ["p1_kicker", "Paso 1 · Tu objetivo", ""],
   ["p1_titulo", "¿Qué te gustaría que pasara con <em>tu terreno</em>?", ""],
@@ -306,12 +314,12 @@ const TEXTOS_SEMILLA = [
    "Un nombre corto para tu análisis. Ej. \"El terreno de la loma\".", ""],
 
   ["p5_kicker", "Paso 5 · Tus datos", ""],
-  ["p5_titulo", "¿A dónde te enviamos tu <em>análisis de potencial</em>?", ""],
+  ["p5_titulo", "¿A dónde te contactamos para agendar tu <em>videollamada</em>?", ""],
   ["p5_sub",
-   "Tu Masterdeveloper te lo manda en menos de 48 h. Sin costo, sin compromiso.",
+   "Tu Masterdeveloper te contacta en menos de 48 h para coordinar tu videollamada gratis. Sin compromiso.",
    ""],
   ["gate_toggle_correo", "Prefiero por correo →", ""],
-  ["gate_btn", "Ver el potencial de mi terreno →", ""],
+  ["gate_btn", "Agendar mi videollamada →", ""],
   ["gate_candado",
    "Usamos tus datos solo para enviarte tu análisis. Nada de spam. <a href=\"aviso-privacidad.html\" target=\"_blank\">Aviso de privacidad</a>.",
    ""],
@@ -330,23 +338,23 @@ const TEXTOS_SEMILLA = [
   ["r_l2", "Frente", ""],
   ["r_l3", "Aprovechamiento", ""],
   ["r_sesion_t", "Agenda tu videollamada con tu Masterdeveloper", ""],
-  ["r_sesion_1", "Revisamos juntos el análisis de tu terreno", ""],
+  ["r_sesion_1", "Te explicamos qué es el Plan de Potencial, con ejemplos reales", ""],
   ["r_sesion_2",
-   "Si hay rentabilidad, te presentamos la propuesta de co-desarrollo", ""],
-  ["r_sesion_3", "Sin compromiso — tu terreno sigue a tu nombre", ""],
+   "Si tu terreno califica, cómo entrar al co-desarrollo con nuestra cartera", ""],
+  ["r_sesion_3", "Sin compromiso · la videollamada es sin costo", ""],
   ["mdev_nombre", "Alejandro Puebla", ""],
   ["mdev_rol", "Tu Masterdeveloper", ""],
   ["mdev_frase",
    "\"Analizo cada terreno para minimizar la inversión y elevar la rentabilidad de quienes lo aportan.\"",
    ""],
   ["r_paso1",
-   "<b>Tu análisis llega en menos de 48 h</b> con los metros construibles estimados y un rango de inversión.",
+   "<b>Te contactamos en menos de 48 h</b> para confirmar tu videollamada gratis con tu Masterdeveloper.",
    ""],
   ["r_paso2",
-   "En la videollamada revisamos números, cantidades y la propuesta de co-desarrollo si es viable.",
+   "En la videollamada te explicamos a detalle tu Plan de Potencial y, si los números califican, cómo entrar al co-desarrollo.",
    ""],
   ["r_nota",
-   "Los números del análisis son una estimación preliminar para abrir la conversación; se afinan al revisar documentos y la zona. Tu propiedad permanece a tu nombre durante todo el proceso.",
+   "Lo que ves aquí es una lectura preliminar de tu terreno. El Plan de Potencial es el análisis a detalle que se presenta a partir de la videollamada; el co-desarrollo aplica solo para terrenos que califican. Tu propiedad permanece a tu nombre.",
    ""],
 
   ["grx_badge", "Recibido", ""],

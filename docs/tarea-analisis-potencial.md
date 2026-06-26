@@ -24,51 +24,59 @@ Alejandro revisa y manda. Modelada en la tarea diaria de aurum-experiencia.
 > `Tipo = lead_interes` —capital/colaborar/licencia— solo notifícalos en un
 > resumen, no generan análisis.)
 >
-> **2. Por cada terreno, arma un análisis preliminar** con estos datos del
-> renglón: Apodo, Dirección, Geo (Maps), Tipo terreno, Terreno m², Frente,
-> Fondo, M2 construido, Precio esperado, Intención, Aprovechamiento.
-> Calcula y razona (SIN inventar datos del terreno):
->   - m² construibles estimados según superficie, frente/fondo y niveles
->     viables (usa el "Aprovechamiento" como guía).
->   - Un **rango de inversión preliminar** (banda baja–alta), señalando que es
->     estimación para abrir conversación.
+> **2. Por cada terreno, CALIFICA el lead** (uso interno, NO se le envía al
+> cliente) con los datos del renglón: Apodo, Dirección, Geo (Maps), Tipo
+> terreno, Terreno m², Frente, Fondo, M2 construido, Precio esperado,
+> Intención, Aprovechamiento. Razona brevemente (SIN inventar datos):
+>   - Qué tan prometedor luce el terreno para co-desarrollo (alto / medio /
+>     bajo) según superficie, frente/fondo y zona.
 >   - Encaje con la **intención** del dueño (vender / rentar / vivir /
->     co-desarrollar / conocer valor) y, si aplica, una nota de co-desarrollo:
->     *el terreno sigue a su nombre, sin deuda, asociación en participación.*
+>     co-desarrollar / conocer valor).
+>   - **NUNCA** entregues al cliente m² construibles, rango de inversión ni el
+>     análisis a detalle: ESO es el **Plan de Potencial (de pago)** que se
+>     explica y se cotiza EN la videollamada. La meta de este correo es
+>     **agendar/confirmar la videollamada gratis**, nada más.
 >
-> **3. Genera el correo (BORRADOR, nunca enviar):**
+> **3. Genera el correo (BORRADOR, nunca enviar) — objetivo: AGENDAR la
+> videollamada:**
 >   - Para: el WhatsApp no sirve para correo → usa el Email si existe; si el
 >     lead dejó solo WhatsApp, deja el borrador igual con un recordatorio de
 >     contactar por WhatsApp y NO pongas destinatario.
->   - Asunto: `Tu análisis de potencial — {Apodo}` (folio en el cuerpo).
->   - Cuerpo: cover cálido y personalizado (refleja SU intención y SU terreno) +
->     el análisis estructurado + CTA a la videollamada (link `cta_agenda_url`
->     de la pestaña `TEXTOS POTENCIAL`). Tono YODESARROLLO: cercano, claro,
->     español de México. Firma: Alejandro Puebla · Masterdeveloper.
+>   - Asunto: `Agendemos tu videollamada — {Apodo}` (folio en el cuerpo).
+>   - Cuerpo: saludo cálido y personalizado (refleja SU intención y SU terreno),
+>     explica en 2-3 líneas qué verán en la videollamada (qué es el Plan de
+>     Potencial, con ejemplos) y el **CTA a agendar** (link `cta_agenda_url`
+>     de `TEXTOS POTENCIAL`). Deja claro que la videollamada es **sin costo**
+>     y que el co-desarrollo aplica **solo si el terreno califica**. Tono
+>     YODESARROLLO: cercano, claro, español de México. Firma: Alejandro
+>     Puebla · Masterdeveloper.
 >   - cc: comercial@yodesarrollo.mx
 >   - Folio del cuerpo = el `Folio` del renglón (POT-…).
 >
 > **4. Marca seguimiento** (sin degradar) con un POST al webhook:
 >   `{tipo:"estado", secret:"YOD-POT-TAREA-5h8x3k", folio:"<folio>",
->     analisis:"BORRADOR <fecha>", estado:"ANÁLISIS BORRADOR",
->     nota:"<una línea de contexto>"}`
+>     analisis:"INVITACIÓN BORRADOR <fecha>", estado:"INVITADO A VIDEOLLAMADA",
+>     nota:"<calificación interna + una línea de contexto>"}`
 >
 > **5. (Opcional) Sesiones agendadas.** Revisa Google Calendar por eventos de
 > videollamada que coincidan con un lead; si hay, marca
 > `{tipo:"estado", folio, sesion:"AGENDADA <fecha>", estado:"SESIÓN AGENDADA"}`
 > y prepara un borrador de recordatorio con el link de Meet del evento.
 >
-> **6. Resumen.** Al final deja un resumen de cuántos análisis preparaste,
-> cuántos leads de interés (capital/colaborar/licencia) entraron, y cualquier
-> renglón con datos insuficientes (sin dirección ni geo) para revisión manual.
+> **6. Resumen.** Al final deja un resumen de cuántas invitaciones preparaste,
+> su calificación (alto/medio/bajo), cuántos leads de interés
+> (capital/colaborar/licencia) entraron, y cualquier renglón con datos
+> insuficientes (sin ubicación) para revisión manual.
 
 ## Reglas inviolables
 - NUNCA enviar correos automáticamente: siempre borradores.
-- NUNCA prometer cifras como definitivas: el rango es preliminar.
-- NUNCA cambiar la propiedad de nombre ni hablar de deuda: el modelo es
-  asociación en participación, el terreno sigue a nombre del dueño.
+- NUNCA entregar gratis el Plan de Potencial: el correo SOLO agenda la
+  videollamada. Los m² construibles, el rango de inversión y el análisis a
+  detalle son el Plan de Potencial (de PAGO) y se explican EN la llamada.
+- NUNCA presentar el co-desarrollo como seguro: aplica solo si el terreno
+  pasa el filtro del Plan de Potencial ("si los números califican").
 - NO degradar el seguimiento: si un renglón ya está en SESIÓN AGENDADA o
-  CLIENTE, no lo bajes a NUEVO/BORRADOR.
+  CLIENTE, no lo bajes a NUEVO/INVITADO.
 
 ## Pendiente al instalar
 1. Crear la routine en Cowork con este prompt.
