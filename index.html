@@ -5,15 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Despierta tu Terreno · Yodesarrollo</title>
 <meta name="description" content="Descubre el potencial de tu terreno en 2 minutos. Agenda una videollamada gratis con tu Masterdeveloper. Tu terreno sigue a tu nombre.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23703438'/%3E%3Ctext x='50' y='70' font-family='Georgia,serif' font-size='52' font-weight='700' fill='%23fff' text-anchor='middle'%3EYD%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23013e42'/%3E%3Ctext x='50' y='70' font-family='Georgia,serif' font-size='52' font-weight='700' fill='%23fff' text-anchor='middle'%3EYD%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* Paleta tomada de yodesarrollo.mx: blanco + negro + vino. */
-    --vino:#703438; --vino-d:#5b2a2d; --indigo:#703438; --lavanda:#f3e9ea;
-    --petroleo:#1a1714; --tinta:#1a1714; --crema:#ffffff; --arena:#f1ece4;
+    /* Paleta REAL de yodesarrollo.mx (medida por área): blanco/crema + negro
+       + petróleo #013e42 (acento de marca). Sin vino. --vino queda como alias
+       del petróleo para no romper usos previos. */
+    --negro:#0c0c0c; --teal:#013e42; --teal-d:#012a2d;
+    --vino:#013e42; --vino-d:#012a2d; --indigo:#013e42; --lavanda:#e3eced;
+    --petroleo:#013e42; --tinta:#1a1818; --crema:#ffffff; --arena:#f3f0ea;
     --piedra:#8a8079; --carbon:#574e48; --linea:#e7e2da;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -41,7 +44,7 @@
   .grid{display:grid;gap:14px;}
   .g2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
   .card{background:#fff;border:1px solid var(--linea);cursor:pointer;transition:all .22s;position:relative;overflow:hidden;border-radius:14px;display:flex;gap:14px;align-items:center;padding:18px 18px;text-align:left;}
-  .card:hover{border-color:var(--vino);transform:translateY(-2px);box-shadow:0 8px 24px rgba(112,52,56,.10);}
+  .card:hover{border-color:var(--vino);transform:translateY(-2px);box-shadow:0 8px 24px rgba(1,62,66,.10);}
   .card.sel{border-color:var(--vino);box-shadow:0 0 0 1.5px var(--vino);}
   .card.sel::after{content:'✓';position:absolute;top:10px;right:12px;width:22px;height:22px;background:var(--vino);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;}
   .card:focus-visible{outline:2px solid var(--vino);outline-offset:2px;}
@@ -60,8 +63,8 @@
   .field textarea{resize:vertical;min-height:60px;}
   .row2{display:flex;gap:12px;}
   .row2>.field{flex:1;margin-bottom:14px;}
-  .maps-btn{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--lavanda);color:var(--vino);border:1px solid #e2c9cb;border-radius:9px;padding:11px 16px;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;}
-  .maps-btn:hover{background:#ecdcdd;}
+  .maps-btn{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--lavanda);color:var(--vino);border:1px solid #cfe0e0;border-radius:9px;padding:11px 16px;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;}
+  .maps-btn:hover{background:#e3eced;}
   .maps-btn svg{width:17px;height:17px;stroke:var(--indigo);fill:none;stroke-width:1.7;}
   /* steppers / pills */
   .stepper{display:inline-flex;align-items:center;border:1px solid var(--linea);border-radius:11px;overflow:hidden;background:#fff;}
@@ -70,16 +73,16 @@
   .stepper .val{min-width:84px;text-align:center;font-family:Georgia,serif;font-size:18px;padding:0 6px;}
   .stepper .val small{font-size:11px;color:var(--piedra);}
   .pillrow{display:flex;flex-wrap:wrap;gap:10px;}
-  .pill{border:1px solid var(--carbon);min-height:46px;padding:12px 20px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer;transition:all .18s;background:#fff;color:var(--tinta);-webkit-tap-highlight-color:rgba(112,52,56,.18);}
+  .pill{border:1px solid var(--carbon);min-height:46px;padding:12px 20px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer;transition:all .18s;background:#fff;color:var(--tinta);-webkit-tap-highlight-color:rgba(1,62,66,.18);}
   .pill:hover{border-color:var(--vino);color:var(--vino);}
-  .pill.sel{background:var(--vino);color:#fff;border-color:var(--vino);}
+  .pill.sel{background:var(--negro);color:#fff;border-color:var(--negro);}
   .pill:active{transform:translateY(1px);}
   .pill svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;}
   /* buttons / nav */
-  .btn{display:inline-block;background:var(--vino);color:#fff;border:none;padding:16px 38px;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;font-weight:700;text-decoration:none;border-radius:10px;font-family:inherit;}
-  .btn:hover{background:var(--vino-d);}
+  .btn{display:inline-block;background:var(--negro);color:#fff;border:none;padding:16px 38px;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;font-weight:700;text-decoration:none;border-radius:10px;font-family:inherit;}
+  .btn:hover{background:var(--teal);}
   .btn:active{transform:translateY(1px);}
-  .btn:focus-visible{outline:2px solid var(--petroleo);outline-offset:3px;}
+  .btn:focus-visible{outline:2px solid var(--negro);outline-offset:3px;}
   .btn-off{opacity:.45;}
   .btn-ghost{background:transparent;border:1px solid var(--carbon);color:var(--tinta);}
   .btn-ghost:hover{border-color:var(--vino);color:var(--vino);}
@@ -96,13 +99,13 @@
   .trust div{font-size:12px;color:var(--piedra);display:flex;align-items:center;gap:7px;}
   .trust svg{width:16px;height:16px;stroke:var(--vino);fill:none;stroke-width:1.7;}
   /* live bar */
-  #livebar{position:fixed;bottom:0;left:0;right:0;background:var(--petroleo);border-top:2px solid var(--vino);color:#f4f1ec;padding:13px 28px;display:none;align-items:center;justify-content:space-between;z-index:60;flex-wrap:wrap;gap:6px;}
+  #livebar{position:fixed;bottom:0;left:0;right:0;background:var(--negro);border-top:2px solid var(--teal);color:#f4f1ec;padding:13px 28px;display:none;align-items:center;justify-content:space-between;z-index:60;flex-wrap:wrap;gap:6px;}
   #livebar.visible{display:flex;}
   #livebar .lab{font-size:9px;letter-spacing:2.5px;color:#b5a99d;text-transform:uppercase;}
   #livebar .num{font-family:Georgia,serif;font-size:17px;color:#fff;}
   #livebar .num em{color:var(--lavanda);font-style:normal;}
   #livebar.destacar{animation:lb-d 1s ease;}
-  @keyframes lb-d{0%,100%{box-shadow:none;}45%{box-shadow:0 -2px 22px rgba(112,52,56,.7);}}
+  @keyframes lb-d{0%,100%{box-shadow:none;}45%{box-shadow:0 -2px 22px rgba(1,62,66,.7);}}
   /* gate */
   .gate{max-width:500px;}
   .candado{font-size:11.5px;color:var(--carbon);margin-top:6px;display:flex;gap:7px;align-items:flex-start;}
@@ -110,7 +113,7 @@
   .gate-toggle{display:block;margin:-6px 0 14px auto;background:none;border:none;color:var(--indigo);font-size:12.5px;cursor:pointer;padding:6px 2px;}
   .gate-toggle:hover{text-decoration:underline;}
   /* reveal */
-  .reveal-head{background:var(--petroleo);color:#f4f1ec;padding:34px;border-radius:14px 14px 0 0;border-bottom:2px solid var(--vino);}
+  .reveal-head{background:var(--teal);color:#f4f1ec;padding:34px;border-radius:14px 14px 0 0;border-bottom:2px solid var(--teal-d);}
   .reveal-head .kicker{color:var(--lavanda);}
   .reveal-head .folio{font-size:10px;letter-spacing:2px;color:#b5a99d;text-transform:uppercase;margin-top:4px;}
   .statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px;margin-top:22px;}
@@ -128,7 +131,7 @@
   .paso-num{width:26px;height:26px;border:1px solid var(--vino);border-radius:50%;color:var(--vino);font-family:Georgia,serif;display:flex;align-items:center;justify-content:center;flex:none;font-size:13px;}
   .paso-linea p{font-size:13.5px;color:var(--carbon);margin-top:2px;}
   .mdev{display:flex;align-items:center;gap:14px;background:var(--crema);border:1px solid var(--linea);padding:14px 16px;margin-top:18px;border-radius:12px;order:2;}
-  .mdev .foto{width:58px;height:58px;border-radius:50%;flex:none;border:2px solid var(--vino);background:var(--petroleo);display:flex;align-items:center;justify-content:center;color:#fff;font-family:Georgia,serif;font-size:20px;}
+  .mdev .foto{width:58px;height:58px;border-radius:50%;flex:none;border:2px solid var(--teal);background:var(--negro);display:flex;align-items:center;justify-content:center;color:#fff;font-family:Georgia,serif;font-size:20px;}
   .mdev .nombre{font-family:Georgia,serif;font-size:17px;}
   .mdev .rol{font-size:10.5px;letter-spacing:1.2px;color:var(--vino);text-transform:uppercase;margin-top:3px;}
   .mdev .frase{font-size:12px;color:var(--carbon);font-style:italic;margin-top:6px;line-height:1.45;}
@@ -182,7 +185,7 @@
       <div class="trust">
         <div><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg><span data-txt="p0_t1">Videollamada inicial sin costo</span></div>
         <div><svg viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg><span data-txt="p0_t2">Cientos de miles de m² desarrollados</span></div>
-        <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-txt="p0_t3">Te contactamos en menos de 48 h</span></div>
+        <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-txt="p0_t3">Te contactamos en menos de 12 horas</span></div>
       </div>
     </div>
   </section>
@@ -240,22 +243,13 @@
       </div>
     </div>
 
-    <div class="row2">
-      <div class="field">
-        <label data-txt="p3_frente_lbl">Metros de frente</label>
-        <div class="stepper">
-          <button onclick="stepNum('frente',-1)" aria-label="menos">−</button>
-          <div class="val"><span id="frenteVal">10</span><small> m</small></div>
-          <button onclick="stepNum('frente',1)" aria-label="más">+</button>
-        </div>
-      </div>
-      <div class="field">
-        <label data-txt="p3_fondo_lbl">Metros de fondo</label>
-        <div class="stepper">
-          <button onclick="stepNum('fondo',-1)" aria-label="menos">−</button>
-          <div class="val"><span id="fondoVal">30</span><small> m</small></div>
-          <button onclick="stepNum('fondo',1)" aria-label="más">+</button>
-        </div>
+    <div class="field">
+      <label data-txt="p3_frente_lbl">Metros de frente</label>
+      <small data-txt="p3_frente_help">Lo que da la calle. El fondo lo calculamos nosotros.</small>
+      <div class="stepper">
+        <button onclick="stepNum('frente',-1)" aria-label="menos">−</button>
+        <div class="val"><span id="frenteVal">10</span><small> m</small></div>
+        <button onclick="stepNum('frente',1)" aria-label="más">+</button>
       </div>
     </div>
 
@@ -308,7 +302,7 @@
   <section class="pantalla" data-p="5">
     <div class="kicker" data-txt="p5_kicker">Paso 5 · Tus datos</div>
     <h2 data-txt="p5_titulo">¿A dónde te contactamos para agendar tu <em>videollamada</em>?</h2>
-    <p class="sub" data-txt="p5_sub">Tu Masterdeveloper te contacta en menos de 48 h para coordinar tu videollamada gratis. Sin compromiso.</p>
+    <p class="sub" data-txt="p5_sub">Tu Masterdeveloper te contacta en menos de 12 horas para coordinar tu videollamada gratis. Sin compromiso.</p>
     <div class="gate">
       <div class="field"><input id="gNombre" placeholder="Tu nombre" oninput="S.nombre=this.value"></div>
       <div class="field"><input id="gContact" type="tel" inputmode="tel" placeholder="Tu WhatsApp"></div>
@@ -376,7 +370,7 @@
         </div>
       </div>
 
-      <div class="paso-linea"><div class="paso-num">1</div><p data-txt="r_paso1"><b>Te contactamos en menos de 48 h</b> para confirmar tu videollamada gratis con tu Masterdeveloper.</p></div>
+      <div class="paso-linea"><div class="paso-num">1</div><p data-txt="r_paso1"><b>Te contactamos en menos de 12 horas</b> para confirmar tu videollamada gratis con tu Masterdeveloper.</p></div>
       <div class="paso-linea"><div class="paso-num">2</div><p data-txt="r_paso2">En la videollamada te explicamos a detalle tu Plan de Potencial y, si los números califican, cómo entrar al co-desarrollo.</p></div>
 
       <p class="nota" data-txt="r_nota">Lo que ves aquí es una lectura preliminar de tu terreno. El Plan de Potencial es el análisis a detalle que se presenta a partir de la videollamada; el co-desarrollo aplica solo para terrenos que califican. Tu propiedad permanece a tu nombre.</p>
@@ -413,7 +407,7 @@ const AGENDA_URL = "https://calendar.app.google/aoxnSs1WVrkhXFLw6";  /* "Agendar
 /* ---------- Estado ---------- */
 const S0 = {
   intencion:null, direccion:"", geo:"", tipoTerreno:null,
-  m2:300, frente:10, fondo:30, m2construido:0,
+  m2:300, frente:10, m2construido:0,
   rol:null, precio:"", apodo:"", nombre:"", email:"", tel:"",
   contactoTipo:"whatsapp", otraForma:null, origen:{}
 };
@@ -520,7 +514,9 @@ function selTipo(id){
 function selRol(id){ S.rol=id; render(); guardarS(); }
 
 /* ---------- Steppers ---------- */
-const LIMS={m2:[50,5000,50],frente:[3,200,1],fondo:[3,300,1],m2construido:[0,5000,10]};
+const LIMS={m2:[50,5000,50],frente:[3,200,1],m2construido:[0,5000,10]};
+/* fondo se DERIVA (lote regular): m² / frente — no se le pregunta al usuario */
+function fondoDerivado(){return (+S.frente>0)?Math.round((+S.m2)/(+S.frente)):"";}
 function stepNum(k,d){
   const l=LIMS[k];
   S[k]=Math.min(l[1],Math.max(l[0],(+S[k]||0)+d));
@@ -625,7 +621,7 @@ function revelar(){
     nombre:S.nombre, email:S.email, tel:S.tel, contacto_canal:tipo,
     apodo:S.apodo, intencion:S.intencion, intencion_txt:intLabel, rol:S.rol,
     direccion:S.direccion, geo:S.geo, tipo_terreno:S.tipoTerreno,
-    m2:S.m2, frente:S.frente, fondo:S.fondo, m2_construido:S.m2construido,
+    m2:S.m2, frente:S.frente, fondo:fondoDerivado(), m2_construido:S.m2construido,
     precio_esperado:S.precio, aprovechamiento:nivelAprovechamiento(),
     consent:true, consent_ts:new Date().toISOString(), version_aviso:TEXTOS.version_aviso||"",
     origen:S.origen, ts:new Date().toISOString()
@@ -748,7 +744,7 @@ render();
 (function(){
   const set=(id,v)=>{const e=document.getElementById(id);if(e&&v!=null)e.value=v;};
   set("fDireccion",S.direccion);set("fGeo",S.geo);set("fPrecio",S.precio);set("fApodo",S.apodo);
-  ["m2","frente","fondo","m2construido"].forEach(k=>{const e=document.getElementById(k+"Val");if(e)e.textContent=(+S[k]).toLocaleString("es-MX");});
+  ["m2","frente","m2construido"].forEach(k=>{const e=document.getElementById(k+"Val");if(e)e.textContent=(+S[k]).toLocaleString("es-MX");});
   if(S.tipoTerreno==="construccion")document.getElementById("construidoWrap").style.display="";
 })();
 document.getElementById("fDireccion").addEventListener("input",actualizarMapsBtn);

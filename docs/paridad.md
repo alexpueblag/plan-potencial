@@ -13,7 +13,7 @@ Garantiza que el nuevo flujo "Despierta tu terreno" captura **todo** lo de los d
 | 5 | m² construidos | Paso 3 · stepper (si "tiene construcción") | `m2_construido` |
 | 6 | Precio de venta esperado | Paso 4 · input opcional | `precio_esperado` |
 | 7 | Metros de frente | Paso 3 · stepper frente | `frente` |
-| 8 | Metros de fondo | Paso 3 · stepper fondo | `fondo` |
+| 8 | Metros de fondo | DERIVADO (no se pregunta): m² ÷ frente, lote regular | `fondo` |
 | 9 | Nombre propietario/intermediario | Gate (`nombre`) + Paso 4 (rol) | `nombre` + `rol` |
 | 10 | ¿Cómo llamamos a tu propiedad? | Paso 4 · input apodo | `apodo` |
 | 11 | ¿Deseas propuesta de co-desarrollo? (5 op.) | Paso 1 · intención (hook) | `intencion` |
