@@ -4,33 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Despierta tu Terreno · Yodesarrollo</title>
-<meta name="description" content="Descubre el potencial de tu terreno en 2 minutos. Sin costo, sin compromiso. Tu terreno sigue a tu nombre.">
+<meta name="description" content="Descubre el potencial de tu terreno en 2 minutos. Agenda una videollamada gratis con tu Masterdeveloper. Tu terreno sigue a tu nombre.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23703438'/%3E%3Ctext x='50' y='70' font-family='Georgia,serif' font-size='52' font-weight='700' fill='%23fff' text-anchor='middle'%3EYD%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --vino:#703438; --vino-d:#5b2a2d; --indigo:#465798; --lavanda:#e0e4fb;
-    --petroleo:#013e42; --tinta:#1f1c1c; --crema:#f6f5f2; --arena:#ece6da;
-    --piedra:#7a6f63; --carbon:#574e48; --linea:#e3ddd5;
+    /* Paleta tomada de yodesarrollo.mx: blanco + negro + vino. */
+    --vino:#703438; --vino-d:#5b2a2d; --indigo:#703438; --lavanda:#f3e9ea;
+    --petroleo:#1a1714; --tinta:#1a1714; --crema:#ffffff; --arena:#f1ece4;
+    --piedra:#8a8079; --carbon:#574e48; --linea:#e7e2da;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{overflow-x:clip;}
   body{background:var(--crema);color:var(--tinta);font-family:'PT Sans','Helvetica Neue',Arial,sans-serif;line-height:1.5;}
   .serif{font-family:Georgia,'Times New Roman',serif;}
-  header{background:var(--petroleo);border-bottom:2px solid var(--vino);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+  header{background:#ffffff;border-bottom:1px solid var(--linea);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
   .logo{display:flex;align-items:center;gap:12px;line-height:1;}
-  .logo-box{width:42px;height:42px;border:1.5px solid var(--vino);color:#fff;background:var(--vino);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:15px;line-height:1;flex:none;border-radius:9px;font-weight:700;}
-  .logo-txt{display:flex;flex-direction:column;justify-content:center;gap:2px;}
-  .logo-txt>div{margin:0;padding:0;white-space:nowrap;}
-  .logo-txt div:first-child{color:#f4f1ec;font-weight:700;font-size:13px;letter-spacing:2.5px;line-height:1.15;}
-  .logo-txt div.sub{color:#cdbfae;font-size:10px;font-weight:700;letter-spacing:3px;line-height:1.15;}
-  .logo .logo-img{height:38px;width:auto;object-fit:contain;display:block;flex:none;}
+  .logo .logo-img{height:30px;width:auto;object-fit:contain;display:block;flex:none;}
   .prog-wrap{text-align:right;}
   .progress{display:flex;gap:6px;justify-content:flex-end;}
-  .progress span{width:24px;height:3px;background:#1c4a4d;transition:background .4s;border-radius:2px;}
+  .progress span{width:24px;height:3px;background:#e2dcd3;transition:background .4s;border-radius:2px;}
   .progress span.on{background:var(--vino);}
-  #pasoTxt{font-size:9px;letter-spacing:2px;color:#7fa3a5;text-transform:uppercase;margin-top:6px;min-height:11px;}
+  #pasoTxt{font-size:9px;letter-spacing:2px;color:var(--piedra);text-transform:uppercase;margin-top:6px;min-height:11px;}
   main{max-width:880px;margin:0 auto;padding:46px 24px 150px;}
   .pantalla{display:none;animation:fade .5s ease;}
   .pantalla.activa{display:block;}
@@ -63,8 +60,8 @@
   .field textarea{resize:vertical;min-height:60px;}
   .row2{display:flex;gap:12px;}
   .row2>.field{flex:1;margin-bottom:14px;}
-  .maps-btn{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--lavanda);color:var(--indigo);border:1px solid #c9d0f2;border-radius:9px;padding:11px 16px;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;}
-  .maps-btn:hover{background:#d4d9f7;}
+  .maps-btn{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--lavanda);color:var(--vino);border:1px solid #e2c9cb;border-radius:9px;padding:11px 16px;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;}
+  .maps-btn:hover{background:#ecdcdd;}
   .maps-btn svg{width:17px;height:17px;stroke:var(--indigo);fill:none;stroke-width:1.7;}
   /* steppers / pills */
   .stepper{display:inline-flex;align-items:center;border:1px solid var(--linea);border-radius:11px;overflow:hidden;background:#fff;}
@@ -101,7 +98,7 @@
   /* live bar */
   #livebar{position:fixed;bottom:0;left:0;right:0;background:var(--petroleo);border-top:2px solid var(--vino);color:#f4f1ec;padding:13px 28px;display:none;align-items:center;justify-content:space-between;z-index:60;flex-wrap:wrap;gap:6px;}
   #livebar.visible{display:flex;}
-  #livebar .lab{font-size:9px;letter-spacing:2.5px;color:#7fa3a5;text-transform:uppercase;}
+  #livebar .lab{font-size:9px;letter-spacing:2.5px;color:#b5a99d;text-transform:uppercase;}
   #livebar .num{font-family:Georgia,serif;font-size:17px;color:#fff;}
   #livebar .num em{color:var(--lavanda);font-style:normal;}
   #livebar.destacar{animation:lb-d 1s ease;}
@@ -115,10 +112,10 @@
   /* reveal */
   .reveal-head{background:var(--petroleo);color:#f4f1ec;padding:34px;border-radius:14px 14px 0 0;border-bottom:2px solid var(--vino);}
   .reveal-head .kicker{color:var(--lavanda);}
-  .reveal-head .folio{font-size:10px;letter-spacing:2px;color:#7fa3a5;text-transform:uppercase;margin-top:4px;}
+  .reveal-head .folio{font-size:10px;letter-spacing:2px;color:#b5a99d;text-transform:uppercase;margin-top:4px;}
   .statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px;margin-top:22px;}
   .stat .n{font-family:Georgia,serif;font-size:clamp(18px,2.6vw,26px);color:#fff;line-height:1.15;}
-  .stat .l{font-size:9px;letter-spacing:2px;color:#7fa3a5;text-transform:uppercase;margin-top:4px;}
+  .stat .l{font-size:9px;letter-spacing:2px;color:#b5a99d;text-transform:uppercase;margin-top:4px;}
   .reveal-body{background:#fff;border:1px solid var(--linea);border-top:none;padding:30px 34px;border-radius:0 0 14px 14px;display:flex;flex-direction:column;}
   .resumen-q{font-family:Georgia,serif;font-size:clamp(17px,3vw,21px);line-height:1.5;margin:2px 0;order:0;}
   .resumen-q em{color:var(--vino);font-style:italic;}
@@ -168,11 +165,7 @@
 
 <header>
   <div class="logo" id="logo">
-    <div class="logo-box">YO</div>
-    <div class="logo-txt">
-      <div data-txt="marca_nombre">YODESARROLLO</div>
-      <div class="sub" data-txt="marca_sub">CO·DESARROLLO INMOBILIARIO</div>
-    </div>
+    <img class="logo-img" src="img/yod-logo.png" alt="Yodesarrollo">
   </div>
   <div class="prog-wrap"><div class="progress" id="progress"></div><div id="pasoTxt"></div></div>
 </header>
