@@ -399,7 +399,7 @@
 
 /* WEBHOOK del Apps Script (CRM - YOD). Vacío = no postea (la web funciona igual).
    Se llena tras desplegar webhook-apps-script.gs (Fase 2). */
-const WEBHOOK_URL = "";
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw3EB-6Q9Mq-ouDU-JvKMrRUaw4auYVeGkKja783yJ7_dEpCOW8xoMhs8IQMDojmlDB3A/exec";
 
 const TOTAL_P = 5;            /* puntos de progreso (pasos 1..5) */
 const AGENDA_URL = "https://calendar.app.google/aoxnSs1WVrkhXFLw6";  /* "Agendar videollamada" del sitio */
@@ -755,7 +755,7 @@ ir(0);
 if(WEBHOOK_URL){
   const sep=WEBHOOK_URL.includes("?")?"&":"?";
   fetch(WEBHOOK_URL+sep+"recurso=textos&t="+Date.now(),{cache:"no-store"})
-    .then(r=>r.json()).then(t=>{aplicarTextos(t);renderLogo();}).catch(function(){});
+    .then(r=>r.json()).then(j=>{aplicarTextos(j&&j.textos?j.textos:j);renderLogo();}).catch(function(){});
 }
 </script>
 </body>
