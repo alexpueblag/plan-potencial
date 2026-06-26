@@ -1,1 +1,5 @@
 node_modules/
+
+# Internos (contienen TOKEN_TAREA / IDs) — no publicar
+docs/webhook-apps-script.gs
+docs/tarea-analisis-potencial.md
