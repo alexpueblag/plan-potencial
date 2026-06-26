@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Despierta tu Terreno · Yodesarrollo</title>
+<meta name="description" content="Descubre el potencial de tu terreno en 2 minutos. Sin costo, sin compromiso. Tu terreno sigue a tu nombre.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --vino:#703438; --vino-d:#5b2a2d; --indigo:#465798; --lavanda:#e0e4fb;
+    --petroleo:#013e42; --tinta:#1f1c1c; --crema:#f6f5f2; --arena:#ece6da;
+    --piedra:#7a6f63; --carbon:#574e48; --linea:#e3ddd5;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{overflow-x:clip;}
+  body{background:var(--crema);color:var(--tinta);font-family:'PT Sans','Helvetica Neue',Arial,sans-serif;line-height:1.5;}
+  .serif{font-family:Georgia,'Times New Roman',serif;}
+  header{background:var(--petroleo);border-bottom:2px solid var(--vino);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+  .logo{display:flex;align-items:center;gap:12px;line-height:1;}
+  .logo-box{width:42px;height:42px;border:1.5px solid var(--vino);color:#fff;background:var(--vino);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:15px;line-height:1;flex:none;border-radius:9px;font-weight:700;}
+  .logo-txt{display:flex;flex-direction:column;justify-content:center;gap:2px;}
+  .logo-txt>div{margin:0;padding:0;white-space:nowrap;}
+  .logo-txt div:first-child{color:#f4f1ec;font-weight:700;font-size:13px;letter-spacing:2.5px;line-height:1.15;}
+  .logo-txt div.sub{color:#cdbfae;font-size:10px;font-weight:700;letter-spacing:3px;line-height:1.15;}
+  .logo .logo-img{height:38px;width:auto;object-fit:contain;display:block;flex:none;}
+  .prog-wrap{text-align:right;}
+  .progress{display:flex;gap:6px;justify-content:flex-end;}
+  .progress span{width:24px;height:3px;background:#1c4a4d;transition:background .4s;border-radius:2px;}
+  .progress span.on{background:var(--vino);}
+  #pasoTxt{font-size:9px;letter-spacing:2px;color:#7fa3a5;text-transform:uppercase;margin-top:6px;min-height:11px;}
+  main{max-width:880px;margin:0 auto;padding:46px 24px 150px;}
+  .pantalla{display:none;animation:fade .5s ease;}
+  .pantalla.activa{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  .kicker{font-size:10px;letter-spacing:3px;color:var(--vino);text-transform:uppercase;margin-bottom:14px;font-weight:700;}
+  h1{font-family:Georgia,serif;font-size:clamp(28px,5.5vw,46px);font-weight:normal;line-height:1.13;margin-bottom:18px;}
+  h1 em{color:var(--vino);font-style:italic;}
+  h2{font-family:Georgia,serif;font-size:clamp(22px,4vw,33px);font-weight:normal;margin-bottom:10px;}
+  h2 em{color:var(--vino);font-style:italic;}
+  .sub{color:var(--carbon);font-size:15px;max-width:580px;margin-bottom:32px;}
+  .grid{display:grid;gap:14px;}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+  .card{background:#fff;border:1px solid var(--linea);cursor:pointer;transition:all .22s;position:relative;overflow:hidden;border-radius:14px;display:flex;gap:14px;align-items:center;padding:18px 18px;text-align:left;}
+  .card:hover{border-color:var(--vino);transform:translateY(-2px);box-shadow:0 8px 24px rgba(112,52,56,.10);}
+  .card.sel{border-color:var(--vino);box-shadow:0 0 0 1.5px var(--vino);}
+  .card.sel::after{content:'✓';position:absolute;top:10px;right:12px;width:22px;height:22px;background:var(--vino);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;}
+  .card:focus-visible{outline:2px solid var(--vino);outline-offset:2px;}
+  .card .ic{width:46px;height:46px;flex:none;border-radius:11px;background:var(--lavanda);display:flex;align-items:center;justify-content:center;}
+  .card .ic svg{width:26px;height:26px;stroke:var(--indigo);fill:none;stroke-width:1.6;}
+  .card .body h3{font-family:Georgia,serif;font-size:17px;font-weight:normal;margin-bottom:3px;}
+  .card .body p{font-size:12.5px;color:var(--carbon);line-height:1.4;}
+  .mini{font-size:12px;color:var(--piedra);margin:-16px 0 22px;}
+  .mini a{color:var(--indigo);}
+  /* inputs */
+  .field{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:18px 20px;margin-bottom:14px;}
+  .field label{display:block;font-family:Georgia,serif;font-size:16px;margin-bottom:8px;}
+  .field small{display:block;font-size:11.5px;color:var(--piedra);margin:-4px 0 10px;}
+  .field input,.field textarea{width:100%;padding:13px 14px;border:1px solid var(--linea);background:var(--crema);font-size:15px;font-family:inherit;border-radius:9px;}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--vino);background:#fff;}
+  .field textarea{resize:vertical;min-height:60px;}
+  .row2{display:flex;gap:12px;}
+  .row2>.field{flex:1;margin-bottom:14px;}
+  .maps-btn{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--lavanda);color:var(--indigo);border:1px solid #c9d0f2;border-radius:9px;padding:11px 16px;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;}
+  .maps-btn:hover{background:#d4d9f7;}
+  .maps-btn svg{width:17px;height:17px;stroke:var(--indigo);fill:none;stroke-width:1.7;}
+  /* steppers / pills */
+  .stepper{display:inline-flex;align-items:center;border:1px solid var(--linea);border-radius:11px;overflow:hidden;background:#fff;}
+  .stepper button{width:46px;height:46px;background:var(--crema);border:none;font-size:20px;cursor:pointer;color:var(--vino);}
+  .stepper button:hover{background:var(--arena);}
+  .stepper .val{min-width:84px;text-align:center;font-family:Georgia,serif;font-size:18px;padding:0 6px;}
+  .stepper .val small{font-size:11px;color:var(--piedra);}
+  .pillrow{display:flex;flex-wrap:wrap;gap:10px;}
+  .pill{border:1px solid var(--carbon);min-height:46px;padding:12px 20px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer;transition:all .18s;background:#fff;color:var(--tinta);-webkit-tap-highlight-color:rgba(112,52,56,.18);}
+  .pill:hover{border-color:var(--vino);color:var(--vino);}
+  .pill.sel{background:var(--vino);color:#fff;border-color:var(--vino);}
+  .pill:active{transform:translateY(1px);}
+  .pill svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;}
+  /* buttons / nav */
+  .btn{display:inline-block;background:var(--vino);color:#fff;border:none;padding:16px 38px;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;font-weight:700;text-decoration:none;border-radius:10px;font-family:inherit;}
+  .btn:hover{background:var(--vino-d);}
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:2px solid var(--petroleo);outline-offset:3px;}
+  .btn-off{opacity:.45;}
+  .btn-ghost{background:transparent;border:1px solid var(--carbon);color:var(--tinta);}
+  .btn-ghost:hover{border-color:var(--vino);color:var(--vino);}
+  .nav{margin-top:34px;display:flex;gap:14px;align-items:center;}
+  .atras{background:none;border:none;color:var(--piedra);font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;}
+  .atras:hover{color:var(--vino);}
+  .msg{display:none;color:var(--vino);font-size:13px;margin-top:10px;font-weight:700;}
+  /* portada */
+  .hero{text-align:center;padding:18px 0 0;}
+  .hero .badge{display:inline-block;background:var(--lavanda);color:var(--indigo);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:7px 16px;border-radius:999px;margin-bottom:22px;}
+  .hero h1{max-width:760px;margin:0 auto 18px;}
+  .hero .sub{margin:0 auto 30px;text-align:center;}
+  .trust{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-top:34px;}
+  .trust div{font-size:12px;color:var(--piedra);display:flex;align-items:center;gap:7px;}
+  .trust svg{width:16px;height:16px;stroke:var(--vino);fill:none;stroke-width:1.7;}
+  /* live bar */
+  #livebar{position:fixed;bottom:0;left:0;right:0;background:var(--petroleo);border-top:2px solid var(--vino);color:#f4f1ec;padding:13px 28px;display:none;align-items:center;justify-content:space-between;z-index:60;flex-wrap:wrap;gap:6px;}
+  #livebar.visible{display:flex;}
+  #livebar .lab{font-size:9px;letter-spacing:2.5px;color:#7fa3a5;text-transform:uppercase;}
+  #livebar .num{font-family:Georgia,serif;font-size:17px;color:#fff;}
+  #livebar .num em{color:var(--lavanda);font-style:normal;}
+  #livebar.destacar{animation:lb-d 1s ease;}
+  @keyframes lb-d{0%,100%{box-shadow:none;}45%{box-shadow:0 -2px 22px rgba(112,52,56,.7);}}
+  /* gate */
+  .gate{max-width:500px;}
+  .candado{font-size:11.5px;color:var(--carbon);margin-top:6px;display:flex;gap:7px;align-items:flex-start;}
+  .candado svg{width:15px;height:15px;stroke:var(--vino);fill:none;stroke-width:1.7;flex:none;margin-top:1px;}
+  .gate-toggle{display:block;margin:-6px 0 14px auto;background:none;border:none;color:var(--indigo);font-size:12.5px;cursor:pointer;padding:6px 2px;}
+  .gate-toggle:hover{text-decoration:underline;}
+  /* reveal */
+  .reveal-head{background:var(--petroleo);color:#f4f1ec;padding:34px;border-radius:14px 14px 0 0;border-bottom:2px solid var(--vino);}
+  .reveal-head .kicker{color:var(--lavanda);}
+  .reveal-head .folio{font-size:10px;letter-spacing:2px;color:#7fa3a5;text-transform:uppercase;margin-top:4px;}
+  .statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px;margin-top:22px;}
+  .stat .n{font-family:Georgia,serif;font-size:clamp(18px,2.6vw,26px);color:#fff;line-height:1.15;}
+  .stat .l{font-size:9px;letter-spacing:2px;color:#7fa3a5;text-transform:uppercase;margin-top:4px;}
+  .reveal-body{background:#fff;border:1px solid var(--linea);border-top:none;padding:30px 34px;border-radius:0 0 14px 14px;display:flex;flex-direction:column;}
+  .resumen-q{font-family:Georgia,serif;font-size:clamp(17px,3vw,21px);line-height:1.5;margin:2px 0;order:0;}
+  .resumen-q em{color:var(--vino);font-style:italic;}
+  .sesion-box{background:var(--arena);border-left:3px solid var(--vino);padding:20px 22px;margin-top:24px;border-radius:12px;order:1;}
+  .sesion-box h3{font-family:Georgia,serif;font-weight:normal;font-size:19px;margin-bottom:8px;}
+  .sesion-box ul{list-style:none;font-size:13px;color:var(--carbon);}
+  .sesion-box li{padding:4px 0 4px 22px;position:relative;}
+  .sesion-box li::before{content:'—';position:absolute;left:0;color:var(--vino);}
+  .paso-linea{display:flex;gap:12px;margin:13px 0;align-items:flex-start;order:2;}
+  .paso-num{width:26px;height:26px;border:1px solid var(--vino);border-radius:50%;color:var(--vino);font-family:Georgia,serif;display:flex;align-items:center;justify-content:center;flex:none;font-size:13px;}
+  .paso-linea p{font-size:13.5px;color:var(--carbon);margin-top:2px;}
+  .mdev{display:flex;align-items:center;gap:14px;background:var(--crema);border:1px solid var(--linea);padding:14px 16px;margin-top:18px;border-radius:12px;order:2;}
+  .mdev .foto{width:58px;height:58px;border-radius:50%;flex:none;border:2px solid var(--vino);background:var(--petroleo);display:flex;align-items:center;justify-content:center;color:#fff;font-family:Georgia,serif;font-size:20px;}
+  .mdev .nombre{font-family:Georgia,serif;font-size:17px;}
+  .mdev .rol{font-size:10.5px;letter-spacing:1.2px;color:var(--vino);text-transform:uppercase;margin-top:3px;}
+  .mdev .frase{font-size:12px;color:var(--carbon);font-style:italic;margin-top:6px;line-height:1.45;}
+  .agenda-embed{margin-top:16px;background:#fff;border:1px solid var(--linea);overflow:hidden;border-radius:12px;order:1;}
+  .agenda-embed iframe{width:100%;border:0;min-height:680px;display:block;}
+  .agenda-cta{padding:22px 18px;text-align:center;}
+  .agenda-cta .btn{display:block;width:100%;padding:18px;}
+  .agenda-pasos{list-style:none;counter-reset:p;margin:18px 0 0;text-align:left;}
+  .agenda-pasos li{counter-increment:p;position:relative;padding:8px 0 8px 36px;font-size:13.5px;color:var(--carbon);border-bottom:1px dotted var(--linea);}
+  .agenda-pasos li:last-child{border-bottom:none;}
+  .agenda-pasos li::before{content:counter(p);position:absolute;left:0;top:7px;width:24px;height:24px;border:1px solid var(--vino);border-radius:50%;color:var(--vino);font-family:Georgia,serif;font-size:12px;display:flex;align-items:center;justify-content:center;}
+  .nota{font-size:11px;color:var(--piedra);font-style:italic;line-height:1.5;margin-top:14px;order:3;}
+  #gracias{display:none;text-align:center;padding:60px 20px;}
+  #gracias .big{font-family:Georgia,serif;font-size:30px;margin:14px 0;}
+  #gracias .big em{color:var(--vino);font-style:italic;}
+  @media(max-width:700px){
+    header{padding:13px 16px;}
+    .progress span{width:13px;}
+    #pasoTxt{font-size:8px;letter-spacing:1px;}
+    main{padding:22px 16px 140px;}
+    .row2{flex-direction:column;gap:0;}
+    .reveal-head{padding:26px 20px;}
+    .reveal-body{padding:24px 18px;}
+    .agenda-embed iframe{min-height:740px;}
+  }
+  @media(max-width:480px){
+    .logo-txt .sub{font-size:9px;letter-spacing:2.4px;}
+    #livebar{padding:11px 16px;}
+    #livebar .num{font-size:15px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" id="logo">
+    <div class="logo-box">YO</div>
+    <div class="logo-txt">
+      <div data-txt="marca_nombre">YODESARROLLO</div>
+      <div class="sub" data-txt="marca_sub">CO·DESARROLLO INMOBILIARIO</div>
+    </div>
+  </div>
+  <div class="prog-wrap"><div class="progress" id="progress"></div><div id="pasoTxt"></div></div>
+</header>
+
+<main>
+
+  <!-- ===== PORTADA (p0) ===== -->
+  <section class="pantalla activa" data-p="0">
+    <div class="hero">
+      <span class="badge" data-txt="p0_badge">Gratis · 2 minutos · sin compromiso</span>
+      <h1 data-txt="p0_titulo">Tu terreno puede estar <em>dormido</em>. Descubre lo que podría llegar a ser.</h1>
+      <p class="sub" data-txt="p0_sub">Cuéntanos de tu propiedad y tu Masterdeveloper te envía un análisis de potencial con números — en menos de 48 horas. Tu terreno sigue a tu nombre, sin deuda.</p>
+      <button class="btn" onclick="ir(1)" data-txt="p0_cta">Descubrir el potencial →</button>
+      <div class="trust">
+        <div><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg><span data-txt="p0_t1">Tu terreno sigue a tu nombre</span></div>
+        <div><svg viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg><span data-txt="p0_t2">Cientos de miles de m² desarrollados</span></div>
+        <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-txt="p0_t3">Respuesta en menos de 48 h</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PASO 1 · EL SUEÑO ===== -->
+  <section class="pantalla" data-p="1">
+    <div class="kicker" data-txt="p1_kicker">Paso 1 · Tu objetivo</div>
+    <h2 data-txt="p1_titulo">¿Qué te gustaría que pasara con <em>tu terreno</em>?</h2>
+    <p class="sub" data-txt="p1_sub">Elige lo que más se acerca. No hay respuesta incorrecta.</p>
+    <div class="grid g2" id="intenciones"></div>
+    <button class="gate-toggle" style="margin:18px auto 0 0;text-align:left" onclick="ir(99)" data-txt="p1_otro">No tengo terreno, me interesa de otra forma →</button>
+  </section>
+
+  <!-- ===== PASO 2 · DÓNDE ESTÁ ===== -->
+  <section class="pantalla" data-p="2">
+    <div class="kicker" data-txt="p2_kicker">Paso 2 · Ubicación</div>
+    <h2 data-txt="p2_titulo">¿Dónde está tu terreno?</h2>
+    <p class="sub" data-txt="p2_sub">Con la ubicación tu Masterdeveloper analiza la zona, su valor y lo que se puede construir.</p>
+    <div class="field">
+      <label data-txt="p2_dir_lbl">Dirección de la propiedad</label>
+      <small data-txt="p2_dir_help">Calle y número, colonia, ciudad. Lo más completo que puedas.</small>
+      <textarea id="fDireccion" placeholder="Ej. Calle Reforma 123, Col. Centro, Hermosillo, Sonora" oninput="S.direccion=this.value;guardarS()"></textarea>
+    </div>
+    <div class="field">
+      <label data-txt="p2_geo_lbl">Ubicación exacta en el mapa <span style="font-weight:400;font-size:12px;color:var(--piedra)">(opcional pero ideal)</span></label>
+      <a class="maps-btn" id="mapsBtn" target="_blank" rel="noopener" data-txt="p2_geo_btn"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-11a7 7 0 10-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> Buscar mi terreno en Google Maps</a>
+      <small data-txt="p2_geo_help">Búscalo, mantén presionado el punto exacto, toca "Compartir" → "Copiar enlace", y pégalo aquí.</small>
+      <input id="fGeo" inputmode="url" placeholder="Pega aquí el enlace de Google Maps" oninput="S.geo=this.value;guardarS()">
+    </div>
+    <div class="nav">
+      <button class="atras" onclick="ir(1)" data-txt="nav_atras">← Atrás</button>
+      <button class="btn" id="p2cont" onclick="contUbic()" data-txt="nav_cont">Continuar →</button>
+    </div>
+    <p class="msg" id="p2msg"></p>
+  </section>
+
+  <!-- ===== PASO 3 · CÓMO ES ===== -->
+  <section class="pantalla" data-p="3">
+    <div class="kicker" data-txt="p3_kicker">Paso 3 · El terreno</div>
+    <h2 data-txt="p3_titulo">¿Cómo es tu terreno?</h2>
+    <p class="sub" data-txt="p3_sub">Unos cuantos datos y verás el potencial tomar forma abajo.</p>
+
+    <div class="field">
+      <label data-txt="p3_tipo_lbl">¿Cómo está hoy?</label>
+      <div class="pillrow" id="tipoTerreno"></div>
+    </div>
+
+    <div class="field">
+      <label data-txt="p3_sup_lbl">Superficie del terreno</label>
+      <small data-txt="p3_sup_help">Aproximado está bien.</small>
+      <div class="stepper">
+        <button onclick="stepNum('m2',-50)" aria-label="menos">−</button>
+        <div class="val"><span id="m2Val">300</span><small> m²</small></div>
+        <button onclick="stepNum('m2',50)" aria-label="más">+</button>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label data-txt="p3_frente_lbl">Metros de frente</label>
+        <div class="stepper">
+          <button onclick="stepNum('frente',-1)" aria-label="menos">−</button>
+          <div class="val"><span id="frenteVal">10</span><small> m</small></div>
+          <button onclick="stepNum('frente',1)" aria-label="más">+</button>
+        </div>
+      </div>
+      <div class="field">
+        <label data-txt="p3_fondo_lbl">Metros de fondo</label>
+        <div class="stepper">
+          <button onclick="stepNum('fondo',-1)" aria-label="menos">−</button>
+          <div class="val"><span id="fondoVal">30</span><small> m</small></div>
+          <button onclick="stepNum('fondo',1)" aria-label="más">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field" id="construidoWrap" style="display:none">
+      <label data-txt="p3_const_lbl">¿Cuántos m² ya están construidos?</label>
+      <small data-txt="p3_const_help">Lo que habría que considerar o demoler.</small>
+      <div class="stepper">
+        <button onclick="stepNum('m2construido',-10)" aria-label="menos">−</button>
+        <div class="val"><span id="m2construidoVal">0</span><small> m²</small></div>
+        <button onclick="stepNum('m2construido',10)" aria-label="más">+</button>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="atras" onclick="ir(2)" data-txt="nav_atras">← Atrás</button>
+      <button class="btn" onclick="ir(4)" data-txt="nav_cont">Continuar →</button>
+    </div>
+  </section>
+
+  <!-- ===== PASO 4 · TU EXPECTATIVA ===== -->
+  <section class="pantalla" data-p="4">
+    <div class="kicker" data-txt="p4_kicker">Paso 4 · Tu expectativa</div>
+    <h2 data-txt="p4_titulo">Lo último sobre el terreno</h2>
+    <p class="sub" data-txt="p4_sub">Esto nos ayuda a afinar la propuesta. El valor real te lo damos en el análisis.</p>
+
+    <div class="field">
+      <label data-txt="p4_rol_lbl">¿Eres el dueño?</label>
+      <div class="pillrow" id="rolProp"></div>
+    </div>
+
+    <div class="field">
+      <label data-txt="p4_precio_lbl">¿Lo has pensado vender? ¿en cuánto? <span style="font-weight:400;font-size:12px;color:var(--piedra)">(opcional)</span></label>
+      <small data-txt="p4_precio_help">Si tienes una cifra en mente, escríbela. Si no, déjalo en blanco.</small>
+      <input id="fPrecio" inputmode="numeric" placeholder="Ej. 2,500,000" oninput="S.precio=this.value;guardarS()">
+    </div>
+
+    <div class="field">
+      <label data-txt="p4_apodo_lbl">¿Cómo le llamamos a tu propiedad?</label>
+      <small data-txt="p4_apodo_help">Un nombre corto para tu análisis. Ej. "El terreno de la loma".</small>
+      <input id="fApodo" placeholder="Nombre de tu propiedad" oninput="S.apodo=this.value;guardarS()">
+    </div>
+
+    <div class="nav">
+      <button class="atras" onclick="ir(3)" data-txt="nav_atras">← Atrás</button>
+      <button class="btn" onclick="ir(5)" data-txt="nav_cont">Casi listo →</button>
+    </div>
+  </section>
+
+  <!-- ===== PASO 5 · GATE (TUS DATOS) ===== -->
+  <section class="pantalla" data-p="5">
+    <div class="kicker" data-txt="p5_kicker">Paso 5 · Tus datos</div>
+    <h2 data-txt="p5_titulo">¿A dónde te enviamos tu <em>análisis de potencial</em>?</h2>
+    <p class="sub" data-txt="p5_sub">Tu Masterdeveloper te lo manda en menos de 48 h. Sin costo, sin compromiso.</p>
+    <div class="gate">
+      <div class="field"><input id="gNombre" placeholder="Tu nombre" oninput="S.nombre=this.value"></div>
+      <div class="field"><input id="gContact" type="tel" inputmode="tel" placeholder="Tu WhatsApp"></div>
+      <button class="gate-toggle" id="gateToggle" onclick="toggleContacto()" data-txt="gate_toggle_correo">Prefiero por correo →</button>
+      <div class="field"><input id="gEmail2" type="email" inputmode="email" placeholder="Tu correo (para enviarte el análisis)"></div>
+      <button class="btn" style="width:100%" onclick="revelar()" data-txt="gate_btn">Ver el potencial de mi terreno →</button>
+      <p class="msg" id="gateMsg"></p>
+      <div class="candado">
+        <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+        <span data-txt="gate_candado">Usamos tus datos solo para enviarte tu análisis. Nada de spam. <a href="aviso-privacidad.html" target="_blank" style="color:var(--indigo)">Aviso de privacidad</a>.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PASO 99 · OTRA FORMA (no terreno) ===== -->
+  <section class="pantalla" data-p="99">
+    <div class="kicker" data-txt="px_kicker">Sumarte a Yodesarrollo</div>
+    <h2 data-txt="px_titulo">¿Cómo te gustaría <em>participar</em>?</h2>
+    <p class="sub" data-txt="px_sub">No necesitas un terreno para desarrollar con nosotros.</p>
+    <div class="grid g2" id="otrasFormas"></div>
+    <div class="gate" style="margin-top:18px">
+      <div class="field"><input id="xNombre" placeholder="Tu nombre" oninput="S.nombre=this.value"></div>
+      <div class="row2">
+        <div class="field"><input id="xTel" type="tel" inputmode="tel" placeholder="Tu WhatsApp"></div>
+        <div class="field"><input id="xEmail" type="email" inputmode="email" placeholder="Tu correo"></div>
+      </div>
+      <button class="btn" style="width:100%" onclick="enviarOtra()" data-txt="px_btn">Quiero que me contacten →</button>
+      <p class="msg" id="xMsg"></p>
+    </div>
+    <div class="nav"><button class="atras" onclick="ir(1)" data-txt="nav_atras">← Atrás</button></div>
+  </section>
+
+  <!-- ===== REVEAL (p6) ===== -->
+  <section class="pantalla" data-p="6">
+    <div class="reveal-head">
+      <div class="kicker" data-txt="r_kicker">Tu terreno tiene potencial</div>
+      <h2 id="rTitulo" style="color:#fff">Listo</h2>
+      <div class="folio" id="rFolio"></div>
+      <div class="statgrid">
+        <div class="stat"><div class="n" id="rSup">—</div><div class="l" data-txt="r_l1">Superficie</div></div>
+        <div class="stat"><div class="n" id="rFrente">—</div><div class="l" data-txt="r_l2">Frente</div></div>
+        <div class="stat"><div class="n" id="rNiveles">—</div><div class="l" data-txt="r_l3">Aprovechamiento</div></div>
+      </div>
+    </div>
+    <div class="reveal-body">
+      <p class="resumen-q" id="rResumen"></p>
+
+      <div class="sesion-box">
+        <h3 data-txt="r_sesion_t">Agenda tu videollamada con tu Masterdeveloper</h3>
+        <ul>
+          <li data-txt="r_sesion_1">Revisamos juntos el análisis de tu terreno</li>
+          <li data-txt="r_sesion_2">Si hay rentabilidad, te presentamos la propuesta de co-desarrollo</li>
+          <li data-txt="r_sesion_3">Sin compromiso — tu terreno sigue a tu nombre</li>
+        </ul>
+      </div>
+
+      <div class="agenda-embed" id="agendaSlot"></div>
+
+      <div class="mdev" id="mdevCard">
+        <div class="foto" id="mdevFoto">AP</div>
+        <div>
+          <div class="nombre" data-txt="mdev_nombre">Alejandro Puebla</div>
+          <div class="rol" data-txt="mdev_rol">Tu Masterdeveloper</div>
+          <div class="frase" data-txt="mdev_frase">"Analizo cada terreno para minimizar la inversión y elevar la rentabilidad de quienes lo aportan."</div>
+        </div>
+      </div>
+
+      <div class="paso-linea"><div class="paso-num">1</div><p data-txt="r_paso1"><b>Tu análisis llega en menos de 48 h</b> con los metros construibles estimados y un rango de inversión.</p></div>
+      <div class="paso-linea"><div class="paso-num">2</div><p data-txt="r_paso2">En la videollamada revisamos números, cantidades y la propuesta de co-desarrollo si es viable.</p></div>
+
+      <p class="nota" data-txt="r_nota">Los números del análisis son una estimación preliminar para abrir la conversación; se afinan al revisar documentos y la zona. Tu propiedad permanece a tu nombre durante todo el proceso.</p>
+    </div>
+  </section>
+
+  <!-- ===== GRACIAS ===== -->
+  <section id="gracias">
+    <span class="badge" style="display:inline-block;background:var(--lavanda);color:var(--indigo);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:7px 16px;border-radius:999px" data-txt="grx_badge">Recibido</span>
+    <div class="big" data-txt="grx_titulo">¡Gracias! Te <em>contactamos</em> muy pronto.</div>
+    <p class="sub" style="margin:0 auto;text-align:center" data-txt="grx_sub">Tu Masterdeveloper revisará tu información y se pondrá en contacto contigo.</p>
+  </section>
+
+</main>
+
+<!-- ===== LIVE BAR ===== -->
+<div id="livebar">
+  <div><div class="lab" data-txt="lb_lab">Potencial de tu terreno</div><div class="num" id="lbNum">—</div></div>
+</div>
+
+<script>
+/* ============================================================
+   Despierta tu Terreno · Yodesarrollo
+   HTML estático, un solo archivo. Patrón heredado de aurum-experiencia.
+   ============================================================ */
+
+/* WEBHOOK del Apps Script (CRM - YOD). Vacío = no postea (la web funciona igual).
+   Se llena tras desplegar webhook-apps-script.gs (Fase 2). */
+const WEBHOOK_URL = "";
+
+const TOTAL_P = 5;            /* puntos de progreso (pasos 1..5) */
+const AGENDA_URL = "https://calendar.app.google/aoxnSs1WVrkhXFLw6";  /* "Agendar videollamada" del sitio */
+
+/* ---------- Estado ---------- */
+const S0 = {
+  intencion:null, direccion:"", geo:"", tipoTerreno:null,
+  m2:300, frente:10, fondo:30, m2construido:0,
+  rol:null, precio:"", apodo:"", nombre:"", email:"", tel:"",
+  contactoTipo:"whatsapp", otraForma:null, origen:{}
+};
+let S = JSON.parse(JSON.stringify(S0));
+
+/* ---------- Catálogo de opciones (la lógica vive aquí; el texto es editable) ---------- */
+const INTENCIONES = [
+  {id:"vender",   t:"Venderlo mejor",            d:"Saber cuánto vale y sacarle el máximo.",       ic:"tag"},
+  {id:"rentar",   t:"Construir y rentar",        d:"Que mi terreno genere ingresos.",              ic:"coin"},
+  {id:"vivir",    t:"Construir para vivir",      d:"Hacer mi hogar en él.",                        ic:"home"},
+  {id:"codesarrollo", t:"Co-desarrollar sin invertir de más", d:"Desarrollarlo en sociedad, sin endeudarme.", ic:"hands"},
+  {id:"valor",    t:"Solo saber su potencial",   d:"Tengo curiosidad de lo que podría ser.",       ic:"search"}
+];
+const TIPOS = [
+  {id:"baldio",       t:"Baldío / sin construir", ic:"square"},
+  {id:"construccion", t:"Tiene construcción",     ic:"home"}
+];
+const ROLES = [
+  {id:"dueno",        t:"Sí, soy el dueño",       ic:"user"},
+  {id:"intermediario",t:"Soy intermediario",      ic:"users"}
+];
+const OTRAS = [
+  {id:"capital",  t:"Aportar capital",         d:"Asociación en participación, retornos de hasta 20% anual.", ic:"coin"},
+  {id:"colaborar",t:"Colaborar con el equipo", d:"Sumar mi trabajo a Yodesarrollo.",                          ic:"users"},
+  {id:"licencia", t:"Ser Masterdeveloper",     d:"Licencia y procesos para representar a Yodesarrollo en mi ciudad.", ic:"flag"}
+];
+
+const ICONS = {
+  tag:'<path d="M3 12l9-9 9 9-9 9z"/><circle cx="9" cy="9" r="1.5"/>',
+  coin:'<circle cx="12" cy="12" r="8"/><path d="M12 8v8M9.5 10.5h3.5a1.5 1.5 0 010 3H10"/>',
+  home:'<path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/>',
+  hands:'<path d="M3 12l4-4 5 2 4-3 5 3"/><path d="M3 16l4-2 5 2 4-2 5 2"/>',
+  search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/>',
+  square:'<rect x="4" y="4" width="16" height="16" rx="1"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-5 7-5"/><path d="M16 6a3.5 3.5 0 010 7M22 20c0-3.5-3-5-7-5"/>',
+  flag:'<path d="M5 21V4M5 4h12l-2 4 2 4H5"/>'
+};
+function svgIc(name){return '<svg viewBox="0 0 24 24">'+(ICONS[name]||"")+'</svg>';}
+
+/* ---------- Textos editables (respaldo embebido; el Sheet manda si responde) ---------- */
+const TEXTOS = {
+  marca_nombre:"YODESARROLLO", marca_sub:"CO·DESARROLLO INMOBILIARIO",
+  version_aviso:"v1-2026-06"
+};
+
+/* ---------- Persistencia ---------- */
+function guardarS(){try{localStorage.setItem("yod_pot",JSON.stringify(S));}catch(e){}}
+function restaurarS(){try{const r=localStorage.getItem("yod_pot");if(r)S=Object.assign(JSON.parse(JSON.stringify(S0)),JSON.parse(r));}catch(e){}}
+
+/* ---------- Navegación ---------- */
+function pActual(){const a=document.querySelector(".pantalla.activa");return a?(a.dataset.p):"0";}
+function ir(p){
+  document.getElementById("gracias").style.display="none";
+  document.querySelector("main").style.display="";
+  document.querySelectorAll(".pantalla").forEach(x=>x.classList.remove("activa"));
+  const el=document.querySelector('[data-p="'+p+'"]');
+  if(el)el.classList.add("activa");
+  const np=parseInt(p,10);
+  const prog=document.getElementById("progress");
+  if(!isNaN(np)&&np>=1&&np<=TOTAL_P){
+    prog.innerHTML=Array.from({length:TOTAL_P},(_,i)=>'<span class="'+(i<np?'on':'')+'"></span>').join("");
+  }else{prog.innerHTML="";}
+  const pt=document.getElementById("pasoTxt");
+  if(pt)pt.textContent=(np>=1&&np<=4)?("Paso "+np+" de "+TOTAL_P):(np===5?"Casi listo — solo tus datos":"");
+  window.scrollTo({top:0,behavior:"smooth"});
+  livebar();guardarS();
+}
+
+/* ---------- Render de opciones ---------- */
+function pintarCards(contId, lista, campo, onSel){
+  const c=document.getElementById(contId); if(!c)return;
+  c.innerHTML=lista.map(o=>
+    '<button class="card '+(S[campo]===o.id?'sel':'')+'" onclick="'+onSel+'(\''+o.id+'\')">'+
+      '<span class="ic">'+svgIc(o.ic)+'</span>'+
+      '<span class="body"><h3>'+o.t+'</h3>'+(o.d?'<p>'+o.d+'</p>':'')+'</span>'+
+    '</button>').join("");
+}
+function pintarPills(contId, lista, campo, onSel){
+  const c=document.getElementById(contId); if(!c)return;
+  c.innerHTML=lista.map(o=>
+    '<button class="pill '+(S[campo]===o.id?'sel':'')+'" onclick="'+onSel+'(\''+o.id+'\')">'+svgIc(o.ic)+o.t+'</button>'
+  ).join("");
+}
+function render(){
+  pintarCards("intenciones",INTENCIONES,"intencion","selIntencion");
+  pintarCards("otrasFormas",OTRAS,"otraForma","selOtra");
+  pintarPills("tipoTerreno",TIPOS,"tipoTerreno","selTipo");
+  pintarPills("rolProp",ROLES,"rol","selRol");
+}
+
+function selIntencion(id){
+  S.intencion=id; render(); guardarS();
+  /* auto-avance suave; se cancela si el usuario ya navegó a otra pantalla */
+  setTimeout(()=>{ if(pActual()==="1") ir(2); },180);
+}
+function selOtra(id){ S.otraForma=id; render(); }
+function selTipo(id){
+  S.tipoTerreno=id; render();
+  document.getElementById("construidoWrap").style.display = (id==="construccion")?"":"none";
+  if(id!=="construccion"){S.m2construido=0;const e=document.getElementById("m2construidoVal");if(e)e.textContent="0";}
+  livebar();guardarS();
+}
+function selRol(id){ S.rol=id; render(); guardarS(); }
+
+/* ---------- Steppers ---------- */
+const LIMS={m2:[50,5000,50],frente:[3,200,1],fondo:[3,300,1],m2construido:[0,5000,10]};
+function stepNum(k,d){
+  const l=LIMS[k];
+  S[k]=Math.min(l[1],Math.max(l[0],(+S[k]||0)+d));
+  const e=document.getElementById(k+"Val"); if(e)e.textContent=(+S[k]).toLocaleString("es-MX");
+  livebar();guardarS();
+}
+
+/* ---------- Barra viva (potencial CUALITATIVO, sin dinero) ---------- */
+function nivelAprovechamiento(){
+  const m2=+S.m2||0;
+  if(m2<160) return "1 nivel";
+  if(m2<400) return "1 a 2 niveles";
+  if(m2<900) return "2 a 3 niveles";
+  return "desarrollo de varias unidades";
+}
+function fraseFrente(){
+  const f=+S.frente||0;
+  if(f<8) return "frente compacto";
+  if(f<12) return "buen frente";
+  return "frente amplio";
+}
+function livebar(){
+  const lb=document.getElementById("livebar");
+  const np=parseInt(pActual(),10);
+  const show=(np>=3&&np<=5);
+  lb.classList.toggle("visible",show);
+  if(!show)return;
+  const m2=(+S.m2||0).toLocaleString("es-MX");
+  document.getElementById("lbNum").innerHTML = m2+" m² · "+fraseFrente()+" · <em>"+nivelAprovechamiento()+"</em>";
+}
+function pulsoLivebar(){const lb=document.getElementById("livebar");if(lb){lb.classList.remove("destacar");void lb.offsetWidth;lb.classList.add("destacar");}}
+
+/* ---------- Validación paso 2 ---------- */
+function contUbic(){
+  const msg=document.getElementById("p2msg");
+  S.direccion=document.getElementById("fDireccion").value.trim();
+  S.geo=document.getElementById("fGeo").value.trim();
+  if(!S.direccion && !S.geo){
+    msg.textContent="Escribe la dirección o pega el enlace del mapa para continuar.";
+    msg.style.display="block"; return;
+  }
+  msg.style.display="none"; guardarS(); ir(3);
+}
+
+/* ---------- Gate de contacto (WhatsApp por default, correo alterno) ---------- */
+function toggleContacto(){
+  const inp=document.getElementById("gContact"), tg=document.getElementById("gateToggle");
+  const em=document.getElementById("gEmail2");
+  if((S.contactoTipo||"whatsapp")==="whatsapp"){
+    S.contactoTipo="correo"; inp.type="email"; inp.setAttribute("inputmode","email");
+    inp.placeholder="Tu correo"; em.style.display="none";
+    if(tg)tg.textContent="Prefiero por WhatsApp →";
+  }else{
+    S.contactoTipo="whatsapp"; inp.type="tel"; inp.setAttribute("inputmode","tel");
+    inp.placeholder="Tu WhatsApp"; em.style.display="";
+    if(tg)tg.textContent="Prefiero por correo →";
+  }
+  inp.value=""; inp.focus();
+}
+
+/* ---------- Folio ---------- */
+function nuevoFolio(nombre){
+  const inic=(nombre||"XX").split(/\s+/).map(w=>w[0]||"").join("").toUpperCase().slice(0,3)||"XX";
+  const f=new Date(), suf=(Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(-5).toUpperCase();
+  return "POT-"+f.getFullYear()+String(f.getMonth()+1).padStart(2,"0")+String(f.getDate()).padStart(2,"0")+"-"+inic+"-"+suf;
+}
+
+/* ---------- POST al CRM ---------- */
+function postLead(payload){
+  if(!WEBHOOK_URL)return;
+  try{
+    const body=JSON.stringify(payload);
+    fetch(WEBHOOK_URL,{method:"POST",mode:"no-cors",keepalive:true,
+      headers:{"Content-Type":"text/plain;charset=utf-8"},body:body}).catch(function(){});
+  }catch(e){}
+}
+
+/* ---------- Cierre / reveal ---------- */
+function revelar(){
+  S.nombre=document.getElementById("gNombre").value.trim();
+  const val=document.getElementById("gContact").value.trim();
+  const tipo=S.contactoTipo||"whatsapp";
+  const emailExtra=document.getElementById("gEmail2").value.trim();
+  let okContacto=false;
+  if(tipo==="correo"){S.email=val.toLowerCase();S.tel="";okContacto=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(S.email);}
+  else{S.tel=val;S.email=emailExtra.toLowerCase();okContacto=val.replace(/\D/g,"").length>=10;}
+  const msg=document.getElementById("gateMsg");
+  if(!S.nombre||!okContacto){
+    msg.textContent=(!S.nombre?"Déjanos tu nombre.":(tipo==="correo"?"Escribe un correo válido.":"Escribe un WhatsApp válido (10 dígitos)."));
+    msg.style.display="block";
+    document.getElementById(!S.nombre?"gNombre":"gContact").focus();
+    return;
+  }
+  msg.style.display="none";
+  const folio=nuevoFolio(S.nombre);
+  const primer=S.nombre.split(" ")[0];
+  const intLabel=(INTENCIONES.find(x=>x.id===S.intencion)||{t:"conocer su potencial"}).t;
+
+  /* POST del lead ANTES del cierre */
+  postLead({
+    tipo:"lead_potencial", folio:folio,
+    nombre:S.nombre, email:S.email, tel:S.tel, contacto_canal:tipo,
+    apodo:S.apodo, intencion:S.intencion, intencion_txt:intLabel, rol:S.rol,
+    direccion:S.direccion, geo:S.geo, tipo_terreno:S.tipoTerreno,
+    m2:S.m2, frente:S.frente, fondo:S.fondo, m2_construido:S.m2construido,
+    precio_esperado:S.precio, aprovechamiento:nivelAprovechamiento(),
+    consent:true, consent_ts:new Date().toISOString(), version_aviso:TEXTOS.version_aviso||"",
+    origen:S.origen, ts:new Date().toISOString()
+  });
+
+  /* Pintar reveal */
+  document.getElementById("rTitulo").textContent=primer+", tu terreno tiene futuro.";
+  document.getElementById("rFolio").textContent="FOLIO "+folio;
+  document.getElementById("rSup").textContent=(+S.m2).toLocaleString("es-MX")+" m²";
+  document.getElementById("rFrente").textContent=(+S.frente)+" m";
+  document.getElementById("rNiveles").textContent=nivelAprovechamiento();
+  const apodo=S.apodo?("<em>"+S.apodo+"</em>"):"tu terreno";
+  document.getElementById("rResumen").innerHTML=
+    "Para "+apodo+" tu objetivo es <em>"+intLabel.toLowerCase()+"</em>. "+
+    "Con "+(+S.m2).toLocaleString("es-MX")+" m² y "+fraseFrente()+", hay con qué trabajar — tu Masterdeveloper te manda el análisis con números en menos de 48 h.";
+
+  /* Foto/iniciales del masterdeveloper */
+  const fEl=document.getElementById("mdevFoto");
+  if(fEl)fEl.textContent="AP";
+
+  montarAgenda();
+  ir(6);
+}
+
+/* ---------- Agenda ----------
+   El link corto calendar.app.google NO se puede embeber en iframe
+   (Google lo bloquea con X-Frame-Options: sameorigin). Por eso usamos
+   SIEMPRE la tarjeta con botón, que abre la página de citas a pantalla
+   completa y funciona en todos los dispositivos (móvil y escritorio).
+   Si algún día se tiene una URL de "appointments" embebible, se puede
+   reactivar el iframe solo en escritorio. */
+function montarAgenda(){
+  const slot=document.getElementById("agendaSlot"); if(!slot)return;
+  const url=TEXTOS.cta_agenda_url||AGENDA_URL;
+  if(!url){slot.style.display="none";return;}
+  const embebible=/\/appointments\//.test(url) && !/calendar\.app\.google/.test(url);
+  const esMovil = window.innerWidth<=780 || /(FBAN|FBAV|Instagram|Line|Twitter|Messenger)/i.test(navigator.userAgent);
+  if(embebible && !esMovil){
+    slot.className="agenda-embed";
+    slot.innerHTML='<iframe src="'+url+'" loading="lazy" title="Agenda tu videollamada"></iframe>';
+    return;
+  }
+  slot.className="agenda-embed agenda-cta";
+  slot.innerHTML=
+    '<a class="btn" href="'+url+'" target="_blank" rel="noopener">Elegir el día y la hora ↗</a>'+
+    '<ul class="agenda-pasos">'+
+    '<li>Se abre la página de citas de Google</li>'+
+    '<li>Eliges el día y la hora que te queden</li>'+
+    '<li>Confirmas — te llega la invitación con el enlace de la videollamada</li>'+
+    '</ul>';
+}
+
+/* ---------- Rama "otra forma" (capital / colaborar / licencia) ---------- */
+function enviarOtra(){
+  S.nombre=document.getElementById("xNombre").value.trim();
+  S.tel=document.getElementById("xTel").value.trim();
+  S.email=document.getElementById("xEmail").value.trim().toLowerCase();
+  const msg=document.getElementById("xMsg");
+  if(!S.otraForma){msg.textContent="Elige cómo te gustaría participar.";msg.style.display="block";return;}
+  if(!S.nombre||(!S.tel && !S.email)){msg.textContent="Déjanos tu nombre y un WhatsApp o correo.";msg.style.display="block";return;}
+  msg.style.display="none";
+  const folio=nuevoFolio(S.nombre);
+  postLead({
+    tipo:"lead_interes", folio:folio, forma:S.otraForma,
+    nombre:S.nombre, email:S.email, tel:S.tel,
+    consent:true, consent_ts:new Date().toISOString(), version_aviso:TEXTOS.version_aviso||"",
+    origen:S.origen, ts:new Date().toISOString()
+  });
+  mostrarGracias();
+}
+function mostrarGracias(){
+  document.querySelector("main").style.display="";
+  document.querySelectorAll(".pantalla").forEach(x=>x.classList.remove("activa"));
+  document.getElementById("livebar").classList.remove("visible");
+  document.getElementById("progress").innerHTML="";
+  document.getElementById("pasoTxt").textContent="";
+  document.getElementById("gracias").style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ---------- UTM / origen ---------- */
+function capturarOrigen(){
+  try{
+    const q=new URLSearchParams(location.search), o={};
+    ["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid","gclid"].forEach(k=>{if(q.get(k))o[k]=q.get(k);});
+    o.ref=document.referrer||""; o.url=location.href;
+    S.origen=o; guardarS();
+  }catch(e){}
+}
+
+/* ---------- Textos desde el Sheet ---------- */
+function aplicarTextos(t){
+  if(!t)return;
+  Object.assign(TEXTOS,t);
+  document.querySelectorAll("[data-txt]").forEach(el=>{
+    const k=el.getAttribute("data-txt");
+    if(t[k]!=null && t[k]!=="") el.innerHTML=t[k];
+  });
+}
+function renderLogo(){
+  if(TEXTOS.logo_url){
+    const l=document.getElementById("logo");
+    if(l)l.innerHTML='<img class="logo-img" src="'+TEXTOS.logo_url+'" alt="Yodesarrollo">';
+  }
+}
+
+/* ---------- Buscar en Maps: arma el link de búsqueda ---------- */
+function actualizarMapsBtn(){
+  const b=document.getElementById("mapsBtn"); if(!b)return;
+  const q=encodeURIComponent(S.direccion||"mi terreno");
+  b.href="https://www.google.com/maps/search/?api=1&query="+q;
+}
+
+/* ---------- Boot ---------- */
+restaurarS();
+capturarOrigen();
+render();
+/* restaurar valores en inputs */
+(function(){
+  const set=(id,v)=>{const e=document.getElementById(id);if(e&&v!=null)e.value=v;};
+  set("fDireccion",S.direccion);set("fGeo",S.geo);set("fPrecio",S.precio);set("fApodo",S.apodo);
+  ["m2","frente","fondo","m2construido"].forEach(k=>{const e=document.getElementById(k+"Val");if(e)e.textContent=(+S[k]).toLocaleString("es-MX");});
+  if(S.tipoTerreno==="construccion")document.getElementById("construidoWrap").style.display="";
+})();
+document.getElementById("fDireccion").addEventListener("input",actualizarMapsBtn);
+actualizarMapsBtn();
+ir(0);
+
+/* Textos en vivo desde el Apps Script (si está desplegado) */
+if(WEBHOOK_URL){
+  const sep=WEBHOOK_URL.includes("?")?"&":"?";
+  fetch(WEBHOOK_URL+sep+"recurso=textos&t="+Date.now(),{cache:"no-store"})
+    .then(r=>r.json()).then(t=>{aplicarTextos(t);renderLogo();}).catch(function(){});
+}
+</script>
+</body>
+</html>
