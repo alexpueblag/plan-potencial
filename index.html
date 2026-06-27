@@ -63,6 +63,12 @@
   .field input,.field textarea{width:100%;padding:13px 14px;border:1px solid var(--linea);background:var(--crema);font-size:15px;font-family:inherit;border-radius:9px;}
   .field input:focus,.field textarea:focus{outline:none;border-color:var(--vino);background:#fff;}
   .field textarea{resize:vertical;min-height:60px;}
+  .money{display:flex;align-items:center;border:1px solid var(--linea);background:var(--crema);border-radius:9px;overflow:hidden;}
+  .money:focus-within{border-color:var(--vino);background:#fff;}
+  .money-sign{font-family:Georgia,serif;font-size:17px;color:var(--vino);padding:0 4px 0 14px;}
+  .money input{flex:1;border:none;background:transparent;padding:13px 8px;font-size:16px;font-family:Georgia,serif;}
+  .money input:focus{outline:none;}
+  .money-cur{font-size:12px;color:var(--piedra);padding:0 14px 0 6px;letter-spacing:.5px;}
   .row2{display:flex;gap:12px;}
   .row2>.field{flex:1;margin-bottom:14px;}
   .maps-btn{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--lavanda);color:var(--vino);border:1px solid #cfe0e0;border-radius:9px;padding:11px 16px;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;}
@@ -93,6 +99,10 @@
   .stepper button:hover{background:var(--arena);}
   .stepper .val{min-width:84px;text-align:center;font-family:Georgia,serif;font-size:18px;padding:0 6px;}
   .stepper .val small{font-size:11px;color:var(--piedra);}
+  .stepper input.stepval{width:90px;text-align:right;font-family:Georgia,serif;font-size:18px;border:none;background:transparent;padding:0 2px 0 6px;color:var(--tinta);-moz-appearance:textfield;}
+  .stepper input.stepval::-webkit-outer-spin-button,.stepper input.stepval::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .stepper input.stepval:focus{outline:none;}
+  .stepper .stepunit{font-size:12px;color:var(--piedra);padding:0 10px 0 4px;align-self:center;}
   .pillrow{display:flex;flex-wrap:wrap;gap:10px;}
   .pill{border:1px solid var(--carbon);min-height:46px;padding:12px 20px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer;transition:all .18s;background:#fff;color:var(--tinta);-webkit-tap-highlight-color:rgba(1,62,66,.18);}
   .pill:hover{border-color:var(--vino);color:var(--vino);}
@@ -143,6 +153,13 @@
   .reveal-body{background:#fff;border:1px solid var(--linea);border-top:none;padding:30px 34px;border-radius:0 0 14px 14px;display:flex;flex-direction:column;}
   .resumen-q{font-family:Georgia,serif;font-size:clamp(17px,3vw,21px);line-height:1.5;margin:2px 0;order:0;}
   .resumen-q em{color:var(--vino);font-style:italic;}
+  #postAgenda{order:-1;}
+  .oferta{background:var(--lavanda);border:1px solid #cfe0e0;border-radius:12px;padding:16px 18px;margin:14px 0;}
+  .oferta-tag{display:inline-block;background:var(--teal);color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:8px;}
+  .oferta p{font-size:14px;color:var(--carbon);line-height:1.5;}
+  .redes-row{display:flex;gap:10px;margin-top:10px;}
+  .redes-row .btn{flex:1;padding:13px 10px;font-size:11px;}
+  @media(max-width:600px){.redes-row{flex-direction:column;}}
   .reveal-map{order:0;margin-top:16px;border:1px solid var(--linea);border-radius:12px;overflow:hidden;}
   #revealMap{height:200px;width:100%;background:#dfe6e6;}
   .reveal-map-cap{font-size:11.5px;color:var(--carbon);padding:9px 13px;background:#fff;display:flex;align-items:center;gap:7px;}
@@ -231,7 +248,7 @@
     <p class="sub" data-txt="p2_sub">No necesitas dar tu dirección. Busca la zona, arrastra el pin sobre tu terreno y listo: con eso tu Masterdeveloper analiza la zona y su potencial.</p>
     <div class="field map-wrap">
       <div class="map-search">
-        <input id="mapSearch" placeholder="Busca tu colonia, calle o ciudad…" inputmode="search">
+        <input id="mapSearch" data-ph="ph_mapsearch" placeholder="Busca tu colonia, calle o ciudad…" inputmode="search">
         <button type="button" class="map-geo" id="mapGeoBtn" data-txt="p2_geo_btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Usar mi ubicación</button>
       </div>
       <div id="map"></div>
@@ -239,7 +256,7 @@
     </div>
     <details class="dir-opcional">
       <summary data-txt="p2_dir_lbl">¿Prefieres escribir la dirección? (opcional)</summary>
-      <textarea id="fDireccion" placeholder="Calle y número, colonia, ciudad" oninput="S.direccion=this.value;guardarS()"></textarea>
+      <textarea id="fDireccion" data-ph="ph_direccion" placeholder="Calle y número, colonia, ciudad" oninput="S.direccion=this.value;guardarS()"></textarea>
     </details>
     <div class="nav">
       <button class="atras" onclick="ir(1)" data-txt="nav_atras">← Atrás</button>
@@ -261,11 +278,12 @@
 
     <div class="field">
       <label data-txt="p3_sup_lbl">Superficie del terreno</label>
-      <small data-txt="p3_sup_help">Aproximado está bien.</small>
+      <small data-txt="p3_sup_help">Escríbelo o ajústalo. Aproximado está bien.</small>
       <div class="stepper">
-        <button onclick="stepNum('m2',-50)" aria-label="menos">−</button>
-        <div class="val"><span id="m2Val">300</span><small> m²</small></div>
-        <button onclick="stepNum('m2',50)" aria-label="más">+</button>
+        <button type="button" onclick="stepNum('m2',-50)" aria-label="menos">−</button>
+        <input id="m2Val" class="stepval" inputmode="numeric" value="300" oninput="onStep('m2',this)" onblur="onStepBlur('m2')" aria-label="metros cuadrados del terreno">
+        <span class="stepunit">m²</span>
+        <button type="button" onclick="stepNum('m2',50)" aria-label="más">+</button>
       </div>
     </div>
 
@@ -273,9 +291,10 @@
       <label data-txt="p3_frente_lbl">Metros de frente</label>
       <small data-txt="p3_frente_help">Lo que da la calle. El fondo lo calculamos nosotros.</small>
       <div class="stepper">
-        <button onclick="stepNum('frente',-1)" aria-label="menos">−</button>
-        <div class="val"><span id="frenteVal">10</span><small> m</small></div>
-        <button onclick="stepNum('frente',1)" aria-label="más">+</button>
+        <button type="button" onclick="stepNum('frente',-1)" aria-label="menos">−</button>
+        <input id="frenteVal" class="stepval" inputmode="numeric" value="10" oninput="onStep('frente',this)" onblur="onStepBlur('frente')" aria-label="metros de frente">
+        <span class="stepunit">m</span>
+        <button type="button" onclick="stepNum('frente',1)" aria-label="más">+</button>
       </div>
     </div>
 
@@ -283,9 +302,10 @@
       <label data-txt="p3_const_lbl">¿Cuántos m² ya están construidos?</label>
       <small data-txt="p3_const_help">Lo que habría que considerar o demoler.</small>
       <div class="stepper">
-        <button onclick="stepNum('m2construido',-10)" aria-label="menos">−</button>
-        <div class="val"><span id="m2construidoVal">0</span><small> m²</small></div>
-        <button onclick="stepNum('m2construido',10)" aria-label="más">+</button>
+        <button type="button" onclick="stepNum('m2construido',-10)" aria-label="menos">−</button>
+        <input id="m2construidoVal" class="stepval" inputmode="numeric" value="0" oninput="onStep('m2construido',this)" onblur="onStepBlur('m2construido')" aria-label="metros construidos">
+        <span class="stepunit">m²</span>
+        <button type="button" onclick="stepNum('m2construido',10)" aria-label="más">+</button>
       </div>
     </div>
 
@@ -309,13 +329,17 @@
     <div class="field">
       <label data-txt="p4_precio_lbl">¿Lo has pensado vender? ¿en cuánto? <span style="font-weight:400;font-size:12px;color:var(--piedra)">(opcional)</span></label>
       <small data-txt="p4_precio_help">Si tienes una cifra en mente, escríbela. Si no, déjalo en blanco.</small>
-      <input id="fPrecio" inputmode="numeric" placeholder="Ej. 2,500,000" oninput="S.precio=this.value;guardarS()">
+      <div class="money">
+        <span class="money-sign">$</span>
+        <input id="fPrecio" data-ph="ph_precio" inputmode="numeric" placeholder="2,500,000" oninput="fmtPrecio(this)">
+        <span class="money-cur">MXN</span>
+      </div>
     </div>
 
     <div class="field">
       <label data-txt="p4_apodo_lbl">¿Cómo le llamamos a tu propiedad?</label>
       <small data-txt="p4_apodo_help">Un nombre corto para tu análisis. Ej. "El terreno de la loma".</small>
-      <input id="fApodo" placeholder="Nombre de tu propiedad" oninput="S.apodo=this.value;guardarS()">
+      <input id="fApodo" data-ph="ph_apodo" placeholder="Nombre de tu propiedad" oninput="S.apodo=this.value;guardarS()">
     </div>
 
     <div class="nav">
@@ -330,10 +354,10 @@
     <h2 data-txt="p5_titulo">¿A dónde te contactamos para agendar tu <em>videollamada</em>?</h2>
     <p class="sub" data-txt="p5_sub">Tu Masterdeveloper te contacta en menos de 12 horas para coordinar tu videollamada gratis. Sin compromiso.</p>
     <div class="gate">
-      <div class="field"><input id="gNombre" placeholder="Tu nombre" oninput="S.nombre=this.value"></div>
-      <div class="field"><input id="gContact" type="tel" inputmode="tel" placeholder="Tu WhatsApp"></div>
+      <div class="field"><input id="gNombre" data-ph="ph_nombre" placeholder="Tu nombre" oninput="S.nombre=this.value"></div>
+      <div class="field"><input id="gContact" data-ph="ph_contacto" type="tel" inputmode="tel" placeholder="Tu WhatsApp"></div>
       <button class="gate-toggle" id="gateToggle" onclick="toggleContacto()" data-txt="gate_toggle_correo">Prefiero por correo →</button>
-      <div class="field"><input id="gEmail2" type="email" inputmode="email" placeholder="Tu correo (para enviarte el análisis)"></div>
+      <div class="field"><input id="gEmail2" data-ph="ph_email" type="email" inputmode="email" placeholder="Tu correo (para enviarte el análisis)"></div>
       <button class="btn" style="width:100%" onclick="revelar()" data-txt="gate_btn">Agendar mi videollamada →</button>
       <p class="msg" id="gateMsg"></p>
       <div class="candado">
@@ -350,10 +374,10 @@
     <p class="sub" data-txt="px_sub">No necesitas un terreno para desarrollar con nosotros.</p>
     <div class="grid g2" id="otrasFormas"></div>
     <div class="gate" style="margin-top:18px">
-      <div class="field"><input id="xNombre" placeholder="Tu nombre" oninput="S.nombre=this.value"></div>
+      <div class="field"><input id="xNombre" data-ph="ph_nombre" placeholder="Tu nombre" oninput="S.nombre=this.value"></div>
       <div class="row2">
-        <div class="field"><input id="xTel" type="tel" inputmode="tel" placeholder="Tu WhatsApp"></div>
-        <div class="field"><input id="xEmail" type="email" inputmode="email" placeholder="Tu correo"></div>
+        <div class="field"><input id="xTel" data-ph="ph_tel" type="tel" inputmode="tel" placeholder="Tu WhatsApp"></div>
+        <div class="field"><input id="xEmail" data-ph="ph_xemail" type="email" inputmode="email" placeholder="Tu correo"></div>
       </div>
       <button class="btn" style="width:100%" onclick="enviarOtra()" data-txt="px_btn">Quiero que me contacten →</button>
       <p class="msg" id="xMsg"></p>
@@ -374,6 +398,20 @@
       </div>
     </div>
     <div class="reveal-body">
+      <div id="postAgenda" style="display:none">
+        <div class="kicker" data-txt="pa_kicker">Casi listo</div>
+        <p class="resumen-q" data-txt="pa_titulo">¡Gracias! Tu videollamada está por confirmarse.</p>
+        <div class="oferta">
+          <span class="oferta-tag" data-txt="pa_tag">10% de descuento</span>
+          <p data-txt="pa_oferta">Síguenos en redes y, si <b>ya nos sigues el día de tu videollamada</b>, te damos un <b>10% de descuento</b> en tu Plan de Potencial.</p>
+        </div>
+        <a class="btn" id="paWa" target="_blank" rel="noopener" style="width:100%;margin-top:6px" data-txt="pa_wa_btn">Escríbenos por WhatsApp</a>
+        <div class="redes-row">
+          <a class="btn btn-ghost" id="paIg" target="_blank" rel="noopener" data-txt="pa_ig_btn">Seguir en Instagram</a>
+          <a class="btn btn-ghost" id="paFb" target="_blank" rel="noopener" data-txt="pa_fb_btn">Seguir en Facebook</a>
+        </div>
+      </div>
+
       <p class="resumen-q" id="rResumen"></p>
 
       <div class="reveal-map" id="revealMapWrap" style="display:none">
@@ -499,6 +537,10 @@ const TEXTOS = {
   version_aviso:"v1-2026-06"
 };
 
+/* lee un texto del Sheet (TEXTOS) con respaldo embebido */
+function T(key,fallback){return (TEXTOS[key]!=null&&TEXTOS[key]!=="")?TEXTOS[key]:fallback;}
+function tpl(s,o){return String(s==null?"":s).replace(/\{(\w+)\}/g,function(m,k){return o[k]!=null?o[k]:"";});}
+
 /* ---------- Persistencia ---------- */
 function guardarS(){try{localStorage.setItem("yod_pot",JSON.stringify(S));}catch(e){}}
 function restaurarS(){try{const r=localStorage.getItem("yod_pot");if(r)S=Object.assign(JSON.parse(JSON.stringify(S0)),JSON.parse(r));}catch(e){}}
@@ -526,25 +568,25 @@ function ir(p){
 }
 
 /* ---------- Render de opciones ---------- */
-function pintarCards(contId, lista, campo, onSel){
+function pintarCards(contId, lista, campo, onSel, pref){
   const c=document.getElementById(contId); if(!c)return;
   c.innerHTML=lista.map(o=>
     '<button class="card '+(S[campo]===o.id?'sel':'')+'" onclick="'+onSel+'(\''+o.id+'\')">'+
       '<span class="ic">'+svgIc(o.ic)+'</span>'+
-      '<span class="body"><h3>'+o.t+'</h3>'+(o.d?'<p>'+o.d+'</p>':'')+'</span>'+
+      '<span class="body"><h3>'+T(pref+o.id+'_t',o.t)+'</h3>'+(o.d?'<p>'+T(pref+o.id+'_d',o.d)+'</p>':'')+'</span>'+
     '</button>').join("");
 }
-function pintarPills(contId, lista, campo, onSel){
+function pintarPills(contId, lista, campo, onSel, pref){
   const c=document.getElementById(contId); if(!c)return;
   c.innerHTML=lista.map(o=>
-    '<button class="pill '+(S[campo]===o.id?'sel':'')+'" onclick="'+onSel+'(\''+o.id+'\')">'+svgIc(o.ic)+o.t+'</button>'
+    '<button class="pill '+(S[campo]===o.id?'sel':'')+'" onclick="'+onSel+'(\''+o.id+'\')">'+svgIc(o.ic)+T(pref+o.id+'_t',o.t)+'</button>'
   ).join("");
 }
 function render(){
-  pintarCards("intenciones",INTENCIONES,"intencion","selIntencion");
-  pintarCards("otrasFormas",OTRAS,"otraForma","selOtra");
-  pintarPills("tipoTerreno",TIPOS,"tipoTerreno","selTipo");
-  pintarPills("rolProp",ROLES,"rol","selRol");
+  pintarCards("intenciones",INTENCIONES,"intencion","selIntencion","int_");
+  pintarCards("otrasFormas",OTRAS,"otraForma","selOtra","otra_");
+  pintarPills("tipoTerreno",TIPOS,"tipoTerreno","selTipo","tipo_");
+  pintarPills("rolProp",ROLES,"rol","selRol","rol_");
 }
 
 function selIntencion(id){
@@ -556,35 +598,53 @@ function selOtra(id){ S.otraForma=id; render(); }
 function selTipo(id){
   S.tipoTerreno=id; render();
   document.getElementById("construidoWrap").style.display = (id==="construccion")?"":"none";
-  if(id!=="construccion"){S.m2construido=0;const e=document.getElementById("m2construidoVal");if(e)e.textContent="0";}
+  if(id!=="construccion"){S.m2construido=0;pintaStep("m2construido");}
   livebar();guardarS();
 }
 function selRol(id){ S.rol=id; render(); guardarS(); }
 
-/* ---------- Steppers ---------- */
-const LIMS={m2:[50,5000,50],frente:[3,200,1],m2construido:[0,5000,10]};
+/* ---------- Steppers (editables a mano + tope alto) ---------- */
+const LIMS={m2:[1,1000000,50],frente:[1,5000,1],m2construido:[0,1000000,10]};
 /* fondo se DERIVA (lote regular): m² / frente — no se le pregunta al usuario */
 function fondoDerivado(){return (+S.frente>0)?Math.round((+S.m2)/(+S.frente)):"";}
+function pintaStep(k){const e=document.getElementById(k+"Val");if(e)e.value=(+S[k]||0).toLocaleString("es-MX");}
 function stepNum(k,d){
   const l=LIMS[k];
   S[k]=Math.min(l[1],Math.max(l[0],(+S[k]||0)+d));
-  const e=document.getElementById(k+"Val"); if(e)e.textContent=(+S[k]).toLocaleString("es-MX");
-  livebar();guardarS();
+  pintaStep(k); livebar(); guardarS();
+}
+/* escribir a mano: deja teclear libre (solo dígitos), sin reformatear hasta salir */
+function onStep(k,el){
+  const n=parseInt(String(el.value).replace(/[^\d]/g,""),10);
+  S[k]=isNaN(n)?0:n;
+  livebar(); guardarS();
+}
+function onStepBlur(k){
+  const l=LIMS[k];
+  S[k]=Math.min(l[1],Math.max(l[0],+S[k]||0));
+  pintaStep(k); livebar(); guardarS();
+}
+/* precio con formato de dinero (comas); S.precio guarda solo dígitos */
+function fmtPrecio(el){
+  const raw=String(el.value).replace(/[^\d]/g,"");
+  S.precio=raw;
+  el.value=raw?(+raw).toLocaleString("es-MX"):"";
+  guardarS();
 }
 
-/* ---------- Barra viva (potencial CUALITATIVO, sin dinero) ---------- */
+/* ---------- Barra viva (potencial CUALITATIVO, sin dinero — frases editables) ---------- */
 function nivelAprovechamiento(){
   const m2=+S.m2||0;
-  if(m2<160) return "1 nivel";
-  if(m2<400) return "1 a 2 niveles";
-  if(m2<900) return "2 a 3 niveles";
-  return "desarrollo de varias unidades";
+  if(m2<160) return T("lb_niv_1","1 nivel");
+  if(m2<400) return T("lb_niv_2","1 a 2 niveles");
+  if(m2<900) return T("lb_niv_3","2 a 3 niveles");
+  return T("lb_niv_4","desarrollo de varias unidades");
 }
 function fraseFrente(){
   const f=+S.frente||0;
-  if(f<8) return "frente compacto";
-  if(f<12) return "buen frente";
-  return "frente amplio";
+  if(f<8) return T("lb_frente_1","frente compacto");
+  if(f<12) return T("lb_frente_2","buen frente");
+  return T("lb_frente_3","frente amplio");
 }
 function livebar(){
   const lb=document.getElementById("livebar");
@@ -593,7 +653,8 @@ function livebar(){
   lb.classList.toggle("visible",show);
   if(!show)return;
   const m2=(+S.m2||0).toLocaleString("es-MX");
-  document.getElementById("lbNum").innerHTML = m2+" m² · "+fraseFrente()+" · <em>"+nivelAprovechamiento()+"</em>";
+  document.getElementById("lbNum").innerHTML = tpl(T("lb_tpl","{m2} m² · {frente} · <em>{niveles}</em>"),
+    {m2:m2, frente:fraseFrente(), niveles:nivelAprovechamiento()});
 }
 function pulsoLivebar(){const lb=document.getElementById("livebar");if(lb){lb.classList.remove("destacar");void lb.offsetWidth;lb.classList.add("destacar");}}
 
@@ -614,12 +675,12 @@ function toggleContacto(){
   const em=document.getElementById("gEmail2");
   if((S.contactoTipo||"whatsapp")==="whatsapp"){
     S.contactoTipo="correo"; inp.type="email"; inp.setAttribute("inputmode","email");
-    inp.placeholder="Tu correo"; em.style.display="none";
-    if(tg)tg.textContent="Prefiero por WhatsApp →";
+    inp.placeholder=T("ph_email","Tu correo"); em.style.display="none";
+    if(tg)tg.textContent=T("gate_toggle_whats","Prefiero por WhatsApp →");
   }else{
     S.contactoTipo="whatsapp"; inp.type="tel"; inp.setAttribute("inputmode","tel");
-    inp.placeholder="Tu WhatsApp"; em.style.display="";
-    if(tg)tg.textContent="Prefiero por correo →";
+    inp.placeholder=T("ph_contacto","Tu WhatsApp"); em.style.display="";
+    if(tg)tg.textContent=T("gate_toggle_correo","Prefiero por correo →");
   }
   inp.value=""; inp.focus();
 }
@@ -677,25 +738,38 @@ function revelar(){
   window.__didLead=true;
   pix("track","Lead",{content_name:"plan_potencial",form:"potencial",intencion:S.intencion},{eventID:folio});
 
-  /* Pintar reveal */
-  document.getElementById("rTitulo").textContent=primer+", tu terreno tiene futuro.";
+  /* Pintar reveal (plantillas editables desde el Sheet) */
+  document.getElementById("rTitulo").innerHTML=tpl(T("r_titulo_tpl","{nombre}, tu terreno tiene futuro."),{nombre:primer});
   document.getElementById("rFolio").textContent="FOLIO "+folio;
   document.getElementById("rSup").textContent=(+S.m2).toLocaleString("es-MX")+" m²";
   document.getElementById("rFrente").textContent=(+S.frente)+" m";
   document.getElementById("rNiveles").textContent=nivelAprovechamiento();
   const apodo=S.apodo?("<em>"+S.apodo+"</em>"):"tu terreno";
-  document.getElementById("rResumen").innerHTML=
-    "Para "+apodo+" tu objetivo es <em>"+intLabel.toLowerCase()+"</em>. "+
-    "Con "+(+S.m2).toLocaleString("es-MX")+" m² y "+fraseFrente()+", hay con qué trabajar. "+
-    "Agenda tu videollamada gratis: te explicamos tu Plan de Potencial y, si tu terreno califica, cómo co-desarrollarlo.";
+  document.getElementById("rResumen").innerHTML=tpl(
+    T("r_resumen_tpl","Para {apodo} tu objetivo es <em>{intencion}</em>. Con {m2} m² y {frente}, hay con qué trabajar. Agenda tu videollamada gratis: te explicamos tu Plan de Potencial y, si tu terreno califica, cómo co-desarrollarlo."),
+    {apodo:apodo, intencion:intLabel.toLowerCase(), m2:(+S.m2).toLocaleString("es-MX"), frente:fraseFrente()});
 
-  /* Foto/iniciales del masterdeveloper */
+  /* Iniciales del masterdeveloper (editable) */
   const fEl=document.getElementById("mdevFoto");
-  if(fEl)fEl.textContent="AP";
+  if(fEl)fEl.textContent=T("mdev_foto","AP");
 
   montarAgenda();
   ir(6);
   montarRevealMapa();
+}
+
+/* pantalla post-agenda: gracias + WhatsApp + síguenos (oferta 10%) */
+function postAgenda(){
+  const pa=document.getElementById("postAgenda"); if(!pa)return;
+  const setH=(id,u)=>{const e=document.getElementById(id);if(e&&u)e.href=u;};
+  setH("paWa",TEXTOS.wa_url||"https://wa.me/5216623184512");
+  setH("paIg",TEXTOS.ig_url||"https://www.instagram.com/yodesarrollo");
+  setH("paFb",TEXTOS.fb_url||"https://www.facebook.com/Yo-Desarrollo-103075448823440/");
+  const body=pa.parentNode;
+  Array.from(body.children).forEach(c=>{ if(c!==pa) c.style.display="none"; });
+  pa.style.display="block";
+  document.getElementById("livebar").classList.remove("visible");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
 /* mini-mapa satelital del terreno en el cierre (no interactivo) */
@@ -735,11 +809,11 @@ function montarAgenda(){
   }
   slot.className="agenda-embed agenda-cta";
   slot.innerHTML=
-    '<a class="btn" href="'+url+'" target="_blank" rel="noopener" onclick="window.__didAgenda=true;pix(\'track\',\'Schedule\',{form:\'potencial\'})">Elegir el día y la hora ↗</a>'+
+    '<a class="btn" href="'+url+'" target="_blank" rel="noopener" onclick="window.__didAgenda=true;pix(\'track\',\'Schedule\',{form:\'potencial\'});setTimeout(postAgenda,400)">'+T("ag_btn","Elegir el día y la hora ↗")+'</a>'+
     '<ul class="agenda-pasos">'+
-    '<li>Se abre la página de citas de Google</li>'+
-    '<li>Eliges el día y la hora que te queden</li>'+
-    '<li>Confirmas — te llega la invitación con el enlace de la videollamada</li>'+
+    '<li>'+T("ag_paso1","Se abre la página de citas de Google")+'</li>'+
+    '<li>'+T("ag_paso2","Eliges el día y la hora que te queden")+'</li>'+
+    '<li>'+T("ag_paso3","Confirmas — te llega la invitación con el enlace de la videollamada")+'</li>'+
     '</ul>';
 }
 
@@ -791,6 +865,13 @@ function aplicarTextos(t){
     const k=el.getAttribute("data-txt");
     if(t[k]!=null && t[k]!=="") el.innerHTML=t[k];
   });
+  /* placeholders editables */
+  document.querySelectorAll("[data-ph]").forEach(el=>{
+    const k=el.getAttribute("data-ph");
+    if(t[k]!=null && t[k]!=="") el.placeholder=t[k];
+  });
+  /* re-pintar tarjetas/píldoras con el texto del Sheet */
+  render();
 }
 function renderLogo(){
   if(TEXTOS.logo_url){
@@ -867,8 +948,9 @@ render();
 /* restaurar valores en inputs */
 (function(){
   const set=(id,v)=>{const e=document.getElementById(id);if(e&&v!=null)e.value=v;};
-  set("fDireccion",S.direccion);set("fPrecio",S.precio);set("fApodo",S.apodo);
-  ["m2","frente","m2construido"].forEach(k=>{const e=document.getElementById(k+"Val");if(e)e.textContent=(+S[k]).toLocaleString("es-MX");});
+  set("fDireccion",S.direccion);set("fApodo",S.apodo);
+  if(S.precio){const fp=document.getElementById("fPrecio");if(fp)fp.value=(+String(S.precio).replace(/[^\d]/g,"")||"").toLocaleString("es-MX");}
+  ["m2","frente","m2construido"].forEach(k=>pintaStep(k));
   if(S.tipoTerreno==="construccion")document.getElementById("construidoWrap").style.display="";
 })();
 (function(){
