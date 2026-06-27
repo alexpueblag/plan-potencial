@@ -521,6 +521,7 @@ function ir(p){
   window.scrollTo({top:0,behavior:"smooth"});
   if(String(p)==="2"){ initMapa(); if(__map) setTimeout(function(){__map.invalidateSize();},250); }
   if(!isNaN(np)) pix("trackCustom","PasoEmbudo",{paso:np,form:"potencial"});
+  if(np>=0&&np<=6) window.__maxPaso=Math.max(window.__maxPaso||0,np);  /* embudo del board */
   livebar();guardarS();
 }
 
@@ -673,6 +674,7 @@ function revelar(){
     origen:S.origen, ts:new Date().toISOString()
   });
   /* Meta: Lead con event_id=folio (dedup con la CAPI server-side del .gs) */
+  window.__didLead=true;
   pix("track","Lead",{content_name:"plan_potencial",form:"potencial",intencion:S.intencion},{eventID:folio});
 
   /* Pintar reveal */
@@ -733,7 +735,7 @@ function montarAgenda(){
   }
   slot.className="agenda-embed agenda-cta";
   slot.innerHTML=
-    '<a class="btn" href="'+url+'" target="_blank" rel="noopener" onclick="pix(\'track\',\'Schedule\',{form:\'potencial\'})">Elegir el día y la hora ↗</a>'+
+    '<a class="btn" href="'+url+'" target="_blank" rel="noopener" onclick="window.__didAgenda=true;pix(\'track\',\'Schedule\',{form:\'potencial\'})">Elegir el día y la hora ↗</a>'+
     '<ul class="agenda-pasos">'+
     '<li>Se abre la página de citas de Google</li>'+
     '<li>Eliges el día y la hora que te queden</li>'+
@@ -757,6 +759,7 @@ function enviarOtra(){
     consent:true, consent_ts:new Date().toISOString(), version_aviso:TEXTOS.version_aviso||"",
     origen:S.origen, ts:new Date().toISOString()
   });
+  window.__didContact=true; enviarActividad();
   pix("track","Contact",{forma:S.otraForma,form:"potencial"},{eventID:folio});
   mostrarGracias();
 }
@@ -839,6 +842,23 @@ function usarMiUbicacion(){
     {enableHighAccuracy:true,timeout:8000}
   );
 }
+
+/* ---------- Beacon de actividad (alimenta el board, server-side, sin perder iOS) ---------- */
+function enviarActividad(){
+  if(!WEBHOOK_URL || window.__actEnviada) return;
+  window.__actEnviada=true;
+  try{
+    var o=S.origen||{};
+    var body=JSON.stringify({tipo:"actividad",
+      paso:(window.__maxPaso==null?0:window.__maxPaso),
+      lead:!!window.__didLead, agenda:!!window.__didAgenda, contact:!!window.__didContact,
+      fuente:(o.utm_source||"(directo)"), hora:String(new Date().getHours())});
+    if(navigator.sendBeacon){ navigator.sendBeacon(WEBHOOK_URL,new Blob([body],{type:"text/plain;charset=UTF-8"})); }
+    else { fetch(WEBHOOK_URL,{method:"POST",mode:"no-cors",keepalive:true,headers:{"Content-Type":"text/plain;charset=utf-8"},body:body}).catch(function(){}); }
+  }catch(e){}
+}
+window.addEventListener("pagehide",enviarActividad);
+document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="hidden") enviarActividad(); });
 
 /* ---------- Boot ---------- */
 restaurarS();
