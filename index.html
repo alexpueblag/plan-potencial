@@ -435,9 +435,9 @@ const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw3EB-6Q9Mq-ouDU-Jv
 const TOTAL_P = 5;            /* puntos de progreso (pasos 1..5) */
 const AGENDA_URL = "https://calendar.app.google/aoxnSs1WVrkhXFLw6";  /* "Agendar videollamada" del sitio */
 
-/* Píxel de Meta de YODESARROLLO. Vacío = desactivado (la web funciona igual).
-   Pega aquí el ID del píxel de Yodesarrollo (Events Manager → Configuración). */
-const META_PIXEL_ID = "";
+/* Píxel de Meta — el MISMO que usa el cuestionario de arquitectura
+   (aurum-experiencia), para medir todo con una sola fuente. Vacío = apagado. */
+const META_PIXEL_ID = "1563269895817275"; /* Pixel "Aurum Arquitectos" (Meta) */
 (function(){
   if(!META_PIXEL_ID) return;
   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
