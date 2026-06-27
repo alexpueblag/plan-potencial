@@ -719,7 +719,7 @@ function revelar(){
     return;
   }
   msg.style.display="none";
-  const folio=nuevoFolio(S.nombre);
+  const folio=nuevoFolio(S.nombre); window.__folio=folio;
   const primer=S.nombre.split(" ")[0];
   const intLabel=(INTENCIONES.find(x=>x.id===S.intencion)||{t:"conocer su potencial"}).t;
 
@@ -758,11 +758,23 @@ function revelar(){
   montarRevealMapa();
 }
 
+/* mensaje de WhatsApp pre-llenado con el resumen del lead (para el Masterdeveloper) */
+function resumenWa(){
+  const obj=(INTENCIONES.find(x=>x.id===S.intencion)||{t:"conocer el potencial de mi terreno"}).t;
+  const tipo=S.tipoTerreno==="construccion"?"(con construcción)":(S.tipoTerreno==="baldio"?"(baldío)":"");
+  const agenda=window.__didAgenda?T("wa_agenda_si","Ya elegí horario para mi videollamada."):T("wa_agenda_no","Quiero agendar mi videollamada.");
+  return tpl(T("wa_msg_tpl",
+    "Hola, soy {nombre}. Llené el formulario Despierta tu Terreno (Plan de Potencial).\n\nFolio: {folio}\nMi objetivo: {objetivo}\nTerreno: {m2} m² · {frente} m de frente {tipo}\nApodo: {apodo}\nUbicación: {geo}\n{agenda}\n\nMe gustaría conocer el potencial de mi terreno y los siguientes pasos."),
+    {nombre:S.nombre||"", folio:window.__folio||"", objetivo:obj,
+     m2:(+S.m2||0).toLocaleString("es-MX"), frente:(+S.frente||0), tipo:tipo,
+     apodo:S.apodo||"(sin nombre)", geo:S.geo||"(no compartió ubicación)", agenda:agenda});
+}
 /* pantalla post-agenda: gracias + WhatsApp + síguenos (oferta 10%) */
 function postAgenda(){
   const pa=document.getElementById("postAgenda"); if(!pa)return;
   const setH=(id,u)=>{const e=document.getElementById(id);if(e&&u)e.href=u;};
-  setH("paWa",TEXTOS.wa_url||"https://wa.me/5216623184512");
+  const waNum=T("wa_num","525518331100");
+  setH("paWa","https://wa.me/"+waNum+"?text="+encodeURIComponent(resumenWa()));
   setH("paIg",TEXTOS.ig_url||"https://www.instagram.com/yodesarrollo");
   setH("paFb",TEXTOS.fb_url||"https://www.facebook.com/Yo-Desarrollo-103075448823440/");
   const body=pa.parentNode;
