@@ -49,7 +49,12 @@ HTML estático de un solo archivo (`index.html`), sin build ni dependencias.
 Tras editar `docs/webhook-apps-script.gs`: pégalo en el proyecto "Plan de Potencial",
 Implementar → Administrar → Editar → **Nueva versión**. Luego, una vez:
 - `actualizarTextosMapa()` — empuja al Sheet la copy nueva del Paso 2 + aviso simplificado.
-- (Las columnas Lat/Lng se agregan solas en el siguiente lead.)
+- (Las columnas Lat/Lng y las pestañas `ACTIVIDAD POTENCIAL` se crean solas.)
+
+## Board (medición del embudo)
+`GET ?recurso=board` devuelve el embudo (server-side, sin pérdida de iOS) + KPIs.
+El navegador manda un beacon de actividad en `pagehide`/`visibilitychange`.
+Brief para el agente del board en `docs/brief-board-redes.md` (local).
 
 ## Identidad
 Vino `#703438` · Índigo `#465798` · Petróleo `#013e42` · Crema `#f6f5f2`.
