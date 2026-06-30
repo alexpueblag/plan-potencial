@@ -25,9 +25,10 @@ HTML estático de un solo archivo (`index.html`), sin build ni dependencias.
 
 ## Archivos
 - `index.html` — la app completa.
+- `board.html` — dashboard visual del embudo (lee `?recurso=board` en vivo).
 - `aviso-privacidad.html` — aviso LFPDPPP.
-- `docs/webhook-apps-script.gs` — Web App: GET textos + POST lead (UPSERT por folio).
-- `docs/tarea-analisis-potencial.md` — routine diaria (borrador en Gmail para AGENDAR la videollamada; no entrega el Plan de pago).
+- `docs/webhook-apps-script.gs` — Web App: GET textos/board + POST lead/gasto/estado (UPSERT por folio).
+- `docs/tarea-analisis-potencial.md` — routine diaria (borrador en Gmail para AGENDAR la videollamada; no entrega el Plan de pago; Calendar ya NO la conecta, lo cierra el .gs solo).
 - `docs/paridad.md` — mapeo de los campos viejos → nuevos (0 huérfanos).
 
 ## Puesta en marcha (pasos de Alejandro)
@@ -47,15 +48,26 @@ HTML estático de un solo archivo (`index.html`), sin build ni dependencias.
 
 ## Redespliegue del Apps Script (cuando cambie el .gs)
 Tras editar `docs/webhook-apps-script.gs`: pégalo en el proyecto "Plan de Potencial",
-Implementar → Administrar → Editar → **Nueva versión**. Luego, una vez:
+Implementar → Administrar → Editar → **Nueva versión**. Luego, una vez (solo la
+primera vez que se agregan, no en cada redespliegue):
 - `actualizarTextosMapa()` — empuja al Sheet la copy nueva del Paso 2 + aviso simplificado.
-- (Las columnas Lat/Lng y las pestañas `ACTIVIDAD POTENCIAL` se crean solas.)
+- `instalarTriggerCitas()` — activa el cruce diario con Calendar (ver "Board" abajo).
+- (Las columnas Lat/Lng, `ACTIVIDAD POTENCIAL` y `GASTO POTENCIAL` se crean solas.)
 
 ## Board (medición del embudo)
-`GET ?recurso=board` devuelve el embudo (server-side, sin pérdida de iOS) + KPIs.
-El navegador manda un beacon de actividad en `pagehide`/`visibilitychange`.
-Brief para el agente del board en `docs/brief-board-redes.md` (local).
+- **Visual:** `board.html`, publicado en GitHub Pages junto al formulario.
+- **Datos:** `GET ?recurso=board` devuelve el embudo (server-side, sin pérdida de
+  iOS), KPIs, gasto/costo por lead y cita, por fuente, por estado y leads recientes.
+  El navegador manda un beacon de actividad en `pagehide`/`visibilitychange`.
+- **Cierre del North Star (citas reales):** `revisarCitasAgendadas_()` corre sola
+  cada día a las 7 AM (trigger instalado con `instalarTriggerCitas()`, una sola
+  vez) — cruza Calendar contra los leads (por email del invitado, o por
+  nombre/WhatsApp en el evento) y marca `Estado = SESIÓN AGENDADA` automático.
+  Sin esto, el board solo ve "agendó (clic)", nunca "cita confirmada".
+- **Gasto:** `POST {tipo:"gasto", secret:"yod-pot-board-2026", semana, monto, campanas}`.
+- Brief para el agente del board en `docs/brief-board-redes.md` (local).
 
 ## Identidad
-Vino `#703438` · Índigo `#465798` · Petróleo `#013e42` · Crema `#f6f5f2`.
-Títulos serif, cuerpo PT Sans.
+Blanco/crema · Negro `#0c0c0c` · Petróleo `#013e42` (acento de marca, igual
+que yodesarrollo.mx). Títulos serif (Georgia), cuerpo PT Sans. Logo oficial
+en `img/yod-logo.png`.
