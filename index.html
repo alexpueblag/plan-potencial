@@ -693,12 +693,40 @@ function nuevoFolio(nombre){
 }
 
 /* ---------- POST al CRM ---------- */
+/* no-cors nunca confirma éxito/error. Como el backend es idempotente por
+   folio (upsertLead_ actualiza el mismo renglón si ya existe), guardamos
+   cada envío en una cola local y lo reintentamos en visitas futuras —
+   reenviar el mismo folio NUNCA duplica, así que reintentar es seguro. */
 function postLead(payload){
   if(!WEBHOOK_URL)return;
+  encolarPendiente(payload);
+  enviarPayload(payload);
+}
+function enviarPayload(payload){
   try{
-    const body=JSON.stringify(payload);
     fetch(WEBHOOK_URL,{method:"POST",mode:"no-cors",keepalive:true,
-      headers:{"Content-Type":"text/plain;charset=utf-8"},body:body}).catch(function(){});
+      headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)}).catch(function(){});
+  }catch(e){}
+}
+function encolarPendiente(payload){
+  try{
+    const folio=payload.folio; if(!folio)return;
+    const q=JSON.parse(localStorage.getItem("yod_pot_pendientes")||"[]").filter(x=>x.folio!==folio);
+    q.push({folio:folio, payload:payload, intentos:1});
+    localStorage.setItem("yod_pot_pendientes",JSON.stringify(q));
+  }catch(e){}
+}
+/* al cargar la página, reintenta envíos de visitas anteriores (máx 3 intentos) */
+function reintentarPendientes(){
+  if(!WEBHOOK_URL)return;
+  try{
+    const q=JSON.parse(localStorage.getItem("yod_pot_pendientes")||"[]");
+    if(!q.length)return;
+    const sigue=[];
+    q.forEach(item=>{
+      if((item.intentos||0)<3){ enviarPayload(item.payload); item.intentos=(item.intentos||0)+1; sigue.push(item); }
+    });
+    localStorage.setItem("yod_pot_pendientes",JSON.stringify(sigue));
   }catch(e){}
 }
 
@@ -956,6 +984,7 @@ document.addEventListener("visibilitychange",function(){ if(document.visibilityS
 /* ---------- Boot ---------- */
 restaurarS();
 capturarOrigen();
+reintentarPendientes();
 render();
 /* restaurar valores en inputs */
 (function(){
