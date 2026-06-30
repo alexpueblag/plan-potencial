@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board · Plan de Potencial · Yodesarrollo</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23013e42'/%3E%3Ctext x='50' y='70' font-family='Georgia,serif' font-size='52' font-weight='700' fill='%23fff' text-anchor='middle'%3EYD%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--negro:#0c0c0c;--teal:#013e42;--teal-d:#012a2d;--crema:#fff;--arena:#f3f0ea;
+    --piedra:#8a8079;--carbon:#574e48;--linea:#e7e2da;--rojo:#a33;--verde:#2f7d4f;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--crema);color:var(--negro);font-family:'PT Sans','Helvetica Neue',Arial,sans-serif;line-height:1.5;}
+  header{background:#fff;border-bottom:1px solid var(--linea);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:10px;}
+  header .logo{display:flex;align-items:center;gap:10px;}
+  header .logo .box{width:30px;height:30px;border-radius:8px;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:700;font-size:13px;}
+  header h1{font-family:Georgia,serif;font-weight:normal;font-size:17px;}
+  header .sub{font-size:11px;color:var(--piedra);}
+  main{max-width:1080px;margin:0 auto;padding:28px 22px 80px;}
+  h2{font-family:Georgia,serif;font-weight:normal;font-size:19px;margin:34px 0 12px;}
+  .kicker{font-size:10px;letter-spacing:2px;color:var(--teal);text-transform:uppercase;font-weight:700;}
+  .grid{display:grid;gap:14px;}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));}
+  .card{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:18px 20px;}
+  .stat-n{font-family:Georgia,serif;font-size:30px;line-height:1.1;}
+  .stat-l{font-size:11px;color:var(--piedra);text-transform:uppercase;letter-spacing:.5px;margin-top:4px;}
+  .stat-note{font-size:11px;color:var(--carbon);margin-top:8px;line-height:1.4;}
+  .badge-warn{display:inline-block;background:#fdf3e0;color:#8a5b10;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;margin-top:6px;}
+  .funnel-row{display:flex;align-items:center;gap:12px;margin-bottom:9px;}
+  .funnel-lbl{width:120px;flex:none;font-size:12.5px;color:var(--carbon);text-align:right;}
+  .funnel-bar-wrap{flex:1;background:var(--arena);border-radius:6px;overflow:hidden;height:24px;position:relative;}
+  .funnel-bar{background:var(--teal);height:100%;border-radius:6px;transition:width .3s;}
+  .funnel-n{width:90px;flex:none;font-size:12.5px;font-family:Georgia,serif;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--piedra);padding:8px 10px;border-bottom:1px solid var(--linea);}
+  td{padding:9px 10px;border-bottom:1px solid var(--linea);}
+  tr:last-child td{border-bottom:none;}
+  .pill-estado{display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;background:var(--arena);color:var(--carbon);}
+  .empty{color:var(--piedra);font-size:13px;font-style:italic;padding:14px 4px;}
+  .refresh{font-size:11px;color:var(--piedra);background:none;border:1px solid var(--linea);border-radius:8px;padding:8px 14px;cursor:pointer;}
+  .refresh:hover{border-color:var(--teal);color:var(--teal);}
+  .err{background:#fdeaea;color:#8a2020;padding:14px 18px;border-radius:10px;font-size:13px;}
+  @media(max-width:560px){.funnel-lbl{width:84px;font-size:11px;}.funnel-n{width:64px;font-size:11px;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="box">YD</div><div><h1>Board · Plan de Potencial</h1><div class="sub" id="updated">cargando…</div></div></div>
+  <button class="refresh" onclick="cargar()">↻ Refrescar</button>
+</header>
+<main id="main">
+  <p class="empty">Cargando datos del embudo…</p>
+</main>
+<script>
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw3EB-6Q9Mq-ouDU-JvKMrRUaw4auYVeGkKja783yJ7_dEpCOW8xoMhs8IQMDojmlDB3A/exec";
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function fmtN(n){return (n||0).toLocaleString("es-MX");}
+function fmtMoney(n){return "$"+(n||0).toLocaleString("es-MX",{maximumFractionDigits:0});}
+
+async function cargar(){
+  const main=document.getElementById("main");
+  main.innerHTML='<p class="empty">Cargando datos del embudo…</p>';
+  try{
+    const r=await fetch(WEBHOOK_URL+"?recurso=board&t="+Date.now(),{cache:"no-store"});
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.error||"el board respondió con error");
+    pintar(d);
+  }catch(e){
+    main.innerHTML='<div class="err">No se pudo cargar el board: '+esc(e.message)+'</div>';
+  }
+}
+
+function pintar(d){
+  document.getElementById("updated").textContent="Actualizado "+new Date(d.meta.actualizado).toLocaleString("es-MX",{dateStyle:"medium",timeStyle:"short"});
+
+  const k=d.kpis||{}, g=d.gasto||{};
+  const agendaClic=(d.funnel||[]).find(f=>f.paso==="agenda");
+  const clic=agendaClic?agendaClic.n:0;
+  const costoLead=(g.semana_actual&&k.leads)?(g.semana_actual/k.leads):null;
+  const costoCita=(g.semana_actual&&k.agendadas)?(g.semana_actual/k.agendadas):null;
+
+  let html="";
+
+  // KPIs
+  html+='<h2><span class="kicker">Esta semana</span></h2><div class="grid g4">';
+  html+=kpiCard(fmtN(k.leads),"Leads (dueños de terreno)");
+  html+=kpiCard(fmtN(clic),"Agendó (clic en el botón)","Hizo clic en “elegir día y hora” — no garantiza que haya elegido un horario.");
+  html+=kpiCard(fmtN(k.agendadas),"Cita confirmada (CRM)",
+    k.agendadas===0&&clic>0?'<span class="badge-warn">Sin confirmar a mano en el Sheet — revisa LEADS - POTENCIAL</span>':"Viene de Estado=SESIÓN AGENDADA en LEADS - POTENCIAL.");
+  html+=kpiCard(fmtN(k.clientes),"Clientes (co-desarrollo)");
+  html+="</div>";
+
+  if(k.interes>0){
+    html+='<div class="card" style="margin-top:12px"><b>'+fmtN(k.interes)+'</b> persona(s) interesadas en capital / colaborar / licencia (no son dueños de terreno — viven aparte del embudo).</div>';
+  }
+
+  // Gasto / costo
+  html+='<h2><span class="kicker">Gasto e inversión</span></h2><div class="grid g4">';
+  html+=kpiCard(fmtMoney(g.semana_actual),"Gasto esta semana ("+esc(g.semana||"")+")");
+  html+=kpiCard(costoLead!=null?fmtMoney(costoLead):"—","Costo por lead");
+  html+=kpiCard(costoCita!=null?fmtMoney(costoCita):"—","Costo por cita confirmada",
+    costoCita==null?"Necesita gasto cargado y al menos 1 cita confirmada.":"");
+  html+=kpiCard(fmtMoney(g.total),"Gasto histórico total");
+  html+="</div>";
+  if(!g.semana_actual){
+    html+='<p class="stat-note" style="margin-top:8px">Sin gasto registrado para esta semana. POST {tipo:"gasto", secret, semana:"'+esc(g.semana||"")+'", monto, campanas} al webhook para cargarlo.</p>';
+  }
+
+  // Embudo
+  html+='<h2><span class="kicker">Embudo</span> · de la portada al cierre</h2><div class="card">';
+  const maxN=Math.max(1,...(d.funnel||[]).map(f=>f.n));
+  (d.funnel||[]).forEach(f=>{
+    const pct=Math.round((f.n/maxN)*100);
+    html+='<div class="funnel-row"><div class="funnel-lbl">'+esc(f.etiqueta)+'</div>'+
+      '<div class="funnel-bar-wrap"><div class="funnel-bar" style="width:'+pct+'%"></div></div>'+
+      '<div class="funnel-n">'+fmtN(f.n)+'</div></div>';
+  });
+  html+='<p class="stat-note">'+fmtN(d.visitas)+' visitas contadas (beacon server-side, no se pierde por iOS/bloqueadores).</p></div>';
+
+  // Por fuente / por estado
+  html+='<div class="grid g2" style="margin-top:8px">';
+  html+='<div><h2 style="margin-top:14px"><span class="kicker">Por fuente</span></h2><div class="card">'+tablaFuente(d.por_fuente)+'</div></div>';
+  html+='<div><h2 style="margin-top:14px"><span class="kicker">Por estado</span></h2><div class="card">'+tablaEstado(d.por_estado)+'</div></div>';
+  html+='</div>';
+
+  // Recientes
+  html+='<h2><span class="kicker">Leads recientes</span></h2><div class="card">'+tablaRecientes(d.recientes)+'</div>';
+
+  document.getElementById("main").innerHTML=html;
+}
+
+function kpiCard(n,l,note){
+  return '<div class="card"><div class="stat-n">'+n+'</div><div class="stat-l">'+esc(l)+'</div>'+(note?'<div class="stat-note">'+note+'</div>':"")+'</div>';
+}
+function tablaFuente(rows){
+  if(!rows||!rows.length) return '<p class="empty">Sin datos de fuente todavía.</p>';
+  let h='<table><tr><th>Fuente</th><th>Leads</th><th>Agendadas</th></tr>';
+  rows.forEach(r=>h+='<tr><td>'+esc(r.fuente)+'</td><td>'+fmtN(r.leads)+'</td><td>'+fmtN(r.agendadas)+'</td></tr>');
+  return h+'</table>';
+}
+function tablaEstado(rows){
+  if(!rows||!rows.length) return '<p class="empty">Sin leads todavía.</p>';
+  let h='<table><tr><th>Estado</th><th>Cuántos</th></tr>';
+  rows.forEach(r=>h+='<tr><td><span class="pill-estado">'+esc(r.estado)+'</span></td><td>'+fmtN(r.n)+'</td></tr>');
+  return h+'</table>';
+}
+function tablaRecientes(rows){
+  if(!rows||!rows.length) return '<p class="empty">Sin leads todavía.</p>';
+  let h='<table><tr><th>Folio</th><th>Apodo</th><th>Tipo</th><th>Estado</th><th>Fuente</th></tr>';
+  rows.forEach(r=>h+='<tr><td style="font-size:11px;color:var(--piedra)">'+esc(r.folio)+'</td><td>'+esc(r.apodo||"—")+'</td>'+
+    '<td>'+(r.tipo==="lead_interes"?"Interés":"Terreno")+'</td><td><span class="pill-estado">'+esc(r.estado||"—")+'</span></td><td>'+esc(r.fuente)+'</td></tr>');
+  return h+'</table>';
+}
+
+cargar();
+</script>
+</body>
+</html>
