@@ -888,11 +888,26 @@ function mostrarGracias(){
 }
 
 /* ---------- UTM / origen ---------- */
+/* Primer toque gana. Antes esto se ejecutaba en CADA carga y pisaba el origen
+   guardado, asi que quien llegaba por una publicacion, se iba a pensarlo y
+   regresaba escribiendo la direccion directo, quedaba registrado como "(directo)"
+   y la publicacion perdia el credito del lead que si trajo. Ahora una visita sin
+   etiqueta ya no borra la que si la traia; una etiqueta nueva si actualiza (la
+   ultima campana que se tomo la molestia de traerlo es la que cuenta). */
 function capturarOrigen(){
   try{
+    const CLAVES=["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid","gclid"];
     const q=new URLSearchParams(location.search), o={};
-    ["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid","gclid"].forEach(k=>{if(q.get(k))o[k]=q.get(k);});
+    CLAVES.forEach(k=>{if(q.get(k))o[k]=q.get(k);});
+    const traeEtiqueta=Object.keys(o).length>0;
+    const previo=S.origen||{};
+    const habiaEtiqueta=CLAVES.some(k=>previo[k]);
+    if(!traeEtiqueta && habiaEtiqueta){
+      previo.url_ultima=location.href;          // se anota la revisita, sin perder el origen
+      S.origen=previo; guardarS(); return;
+    }
     o.ref=document.referrer||""; o.url=location.href;
+    if(habiaEtiqueta && previo.url) o.url_primera=previo.url;
     S.origen=o; guardarS();
   }catch(e){}
 }
