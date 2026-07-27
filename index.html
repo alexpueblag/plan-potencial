@@ -897,17 +897,27 @@ function mostrarGracias(){
 function capturarOrigen(){
   try{
     const CLAVES=["utm_source","utm_medium","utm_campaign","utm_content","utm_term","fbclid","gclid"];
+    /* Solo estas cuentan como "campana". fbclid y gclid NO: Facebook y Google se
+       los pegan a CUALQUIER clic que salga de su plataforma, asi que tomarlos por
+       campana nueva borraba la original en el escenario mas comun de todos —
+       la persona vuelve por cualquier enlace de Facebook y el lead se registraba
+       como "(directo)". Se siguen guardando, pero no desplazan a nadie. */
+    const CAMPANA=["utm_source","utm_medium","utm_campaign","utm_content","utm_term"];
     const q=new URLSearchParams(location.search), o={};
     CLAVES.forEach(k=>{if(q.get(k))o[k]=q.get(k);});
-    const traeEtiqueta=Object.keys(o).length>0;
+    const traeCampana=CAMPANA.some(k=>o[k]);
     const previo=S.origen||{};
-    const habiaEtiqueta=CLAVES.some(k=>previo[k]);
-    if(!traeEtiqueta && habiaEtiqueta){
-      previo.url_ultima=location.href;          // se anota la revisita, sin perder el origen
+    const habiaCampana=CAMPANA.some(k=>previo[k]);
+    if(!traeCampana && habiaCampana){
+      // revisita sin campana (directa, o con fbclid pegado): no pisa el origen
+      previo.url_ultima=location.href;
+      previo.visitas=(previo.visitas||1)+1;
+      CLAVES.forEach(k=>{if(o[k]&&!previo[k])previo[k]=o[k];});   // fbclid nuevo, sin desplazar
       S.origen=previo; guardarS(); return;
     }
     o.ref=document.referrer||""; o.url=location.href;
-    if(habiaEtiqueta && previo.url) o.url_primera=previo.url;
+    o.visitas=(previo.visitas||0)+1;
+    if(habiaCampana && previo.url) o.url_campana_anterior=previo.url;
     S.origen=o; guardarS();
   }catch(e){}
 }
