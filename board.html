@@ -63,7 +63,8 @@ async function cargar(){
   const main=document.getElementById("main");
   main.innerHTML='<p class="empty">Cargando datos del embudo…</p>';
   try{
-    const r=await fetch(WEBHOOK_URL+"?recurso=board&t="+Date.now(),{cache:"no-store"});
+    const _k=(function(){try{return localStorage.getItem("pyod_clave_v1")||""}catch(e){return ""}})();
+    const r=await fetch(WEBHOOK_URL+"?recurso=board&k="+encodeURIComponent(_k)+"&t="+Date.now(),{cache:"no-store"});
     const d=await r.json();
     if(!d.ok) throw new Error(d.error||"el board respondió con error");
     pintar(d);
@@ -156,5 +157,6 @@ function tablaRecientes(rows){
 
 cargar();
 </script>
+<script src="https://alexpueblag.github.io/potenciales-yod/portero.js"></script>
 </body>
 </html>
