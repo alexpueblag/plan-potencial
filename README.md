@@ -64,7 +64,9 @@ primera vez que se agregan, no en cada redespliegue):
   vez) — cruza Calendar contra los leads (por email del invitado, o por
   nombre/WhatsApp en el evento) y marca `Estado = SESIÓN AGENDADA` automático.
   Sin esto, el board solo ve "agendó (clic)", nunca "cita confirmada".
-- **Gasto:** `POST {tipo:"gasto", secret:"yod-pot-board-2026", semana, monto, campanas}`.
+- **Gasto:** `POST {tipo:"gasto", secret, semana, monto, campanas}`. La clave NO se
+  publica: vive en Propiedades del script (`BOARD_SECRET`). Se rota con
+  `rotarBoardSecret()` desde el editor.
 - Brief para el agente del board en `docs/brief-board-redes.md` (local).
 
 ## Identidad
